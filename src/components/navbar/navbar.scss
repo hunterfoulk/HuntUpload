@@ -1,0 +1,105 @@
+.navbar {
+  display: flex;
+  background-color: rgb(58, 58, 58);
+  width: 100%;
+  height: 60px;
+  color: white;
+  align-items: center;
+  justify-content: space-evenly;
+  .left-container {
+    display: flex;
+    // background-color: green;
+    width: 33%;
+    span {
+      font-size: 22px;
+      margin-bottom: 5px;
+      margin-left: 30px;
+    }
+  }
+  .middle-container {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0px;
+    // background-color: red;
+    width: 33%;
+    button {
+      padding: 1px 18px;
+      font-size: 20px;
+      background-color: rgb(87, 87, 87);
+      border: grey;
+      color: white;
+      cursor: pointer;
+    }
+    input {
+      height: 25px;
+      margin-left: 100px;
+      width: 500px;
+      background-color: rgb(43, 43, 43);
+      border: 1px solid grey;
+      color: white;
+      outline: none;
+    }
+  }
+  .right-container {
+    display: flex;
+    // background-color: blue;
+    width: 33%;
+    justify-content: flex-end;
+    margin-right: 15px;
+    img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  }
+  .nav-dropdown {
+    position: absolute;
+    right: 0px;
+    top: 60px;
+    background-color: rgb(192, 106, 106);
+    width: 270px;
+    border-right: 1px solid grey;
+    border-left: 1px solid grey;
+    border-bottom: 1px solid grey;
+    .nav-dropdown-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgb(48, 48, 48);
+      padding: 15px 15px;
+      border-bottom: 1px solid rgba(128, 128, 128, 0.788);
+      span {
+        font-size: 15px;
+      }
+      img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+    .nav-dropdown-middle {
+      display: flex;
+      background-color: rgb(48, 48, 48);
+      justify-content: center;
+      flex-direction: column;
+      padding: 10px 0px;
+
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 30px;
+        padding: 7px 0px;
+        cursor: pointer;
+
+        // background-color: red;
+      }
+      span:hover {
+        background-color: rgb(92, 92, 92);
+      }
+    }
+  }
+}
