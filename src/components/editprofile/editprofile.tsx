@@ -3,45 +3,60 @@ import "./editprofile.scss";
 import { useStateValue } from "../../state";
 import Banner from "../../images/bannertest.jpg";
 import useInput from "../../hooks/useInput";
-// import { updateUser } from "../../utils/index";
-import { userInfo } from "os";
 import axios from "axios";
 
 interface Props {}
 
 const Editprofile: React.FC<Props> = ({}) => {
   const [{ auth }, dispatch] = useStateValue();
-  const [pic, setPic] = useState("");
   const name = useInput(auth.user.name);
-  //   const [name, setName] = useState(auth.user.name);
-  const about = useInput(auth.user.about);
-  const [banner, setBanner] = useState<any>(null);
+  const about = useInput(auth.user.about || "");
+  const [banner, setBanner] = useState<any>(auth.user.banner);
+  const [bannerFile, setBannerFile] = useState<any>(auth.user.banner);
+  const [pic, setPic] = useState<any>(auth.user.img);
+  const [picFile, setPicFile] = useState<any>(auth.user.img);
 
   const handleEditProfileBanner = async (e: any) => {
+    let reader = new FileReader();
     const file = e.target.files[0];
 
     if (file) {
-      setBanner(file);
+      console.log(file);
+      console.log(e.target.value);
+
+      console.log(reader);
+      reader.onloadend = () => {
+        setBanner(reader.result);
+        setBannerFile(file);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  //   console.log("banner", banner);
-
   const handleEditProfilePic = async (e: any) => {
+    let reader = new FileReader();
     const file = e.target.files[0];
 
     if (file) {
-      setPic(file);
       console.log("new pic", file);
+
+      console.log(reader);
+      reader.onloadend = () => {
+        setPic(reader.result);
+        setPicFile(file);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const HandleEditProfileSubmit = async (e: any) => {
     e.preventDefault();
+    let user_id = auth.user.user_id;
     let formData = new FormData();
 
-    formData.append("banner", banner);
-    formData.append("pic", pic);
+    formData.append("user_id", user_id);
+    formData.append("bannerFile", bannerFile);
+    formData.append("picFile", picFile);
     formData.append("name", name.value);
     formData.append("about", about.value);
 
@@ -62,8 +77,9 @@ const Editprofile: React.FC<Props> = ({}) => {
         const user = res.data.payload;
         console.log("response", res);
         console.log("user", user);
-        console.log("new datac sent to database");
+        console.log("new data sent to database");
         localStorage.setItem("user", JSON.stringify(user));
+
         dispatch({
           type: "update",
           auth: {
@@ -103,7 +119,7 @@ const Editprofile: React.FC<Props> = ({}) => {
         </div>
         <div className="edit-profile-pic">
           <label htmlFor="pic-upload">
-            <img src={auth.user.img} />
+            <img src={pic ? pic : auth.user.pic} alt="banner" />
           </label>
           <input
             id="pic-upload"

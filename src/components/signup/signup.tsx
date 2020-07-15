@@ -49,8 +49,8 @@ const Signup: React.FC<Props> = ({}) => {
       <div className="login-main">
         <div className="login-container">
           <div className="login-header">
-            <span>You</span>
-            <span style={{ color: "#E53B38" }}>Tube</span>
+            <span>Hunt</span>
+            <span style={{ color: "#E53B38" }}>Upload</span>
             <AiFillYoutube
               style={{ color: "#E53B38", position: "relative", top: "8px" }}
             />

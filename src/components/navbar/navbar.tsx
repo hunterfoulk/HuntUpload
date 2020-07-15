@@ -1,6 +1,7 @@
 import React from "react";
 import "./navbar.scss";
 import { AiOutlineSearch } from "react-icons/ai";
+import { AiFillYoutube } from "react-icons/ai";
 import { IoMdPerson } from "react-icons/io";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
@@ -23,7 +24,7 @@ const Navbar: React.FC<Props> = ({ setDropdown, dropdown }) => {
     history.push("/profile");
   };
 
-  const handleLogout = (e:any) => {
+  const handleLogout = (e: any) => {
     localStorage.clear();
 
     dispatch({
@@ -38,7 +39,18 @@ const Navbar: React.FC<Props> = ({ setDropdown, dropdown }) => {
     <>
       <div className="navbar">
         <div className="left-container">
-          <span>My App</span>
+          <div style={{ marginLeft: "60px" }}>
+            <span>Hunt</span>
+            <span style={{ color: "#E53B38" }}>Upload</span>
+            <AiFillYoutube
+              style={{
+                color: "#E53B38",
+                position: "relative",
+                top: "3px",
+                fontSize: "24px",
+              }}
+            />
+          </div>
         </div>
         <div className="middle-container">
           <input placeholder="Search..." />
@@ -68,12 +80,12 @@ const Navbar: React.FC<Props> = ({ setDropdown, dropdown }) => {
             }}
           />
 
-          <img onClick={() => setDropdown(!dropdown)} src={auth.user.img} />
+          <img onClick={() => setDropdown(!dropdown)} src={auth.user.pic} />
         </div>
         {dropdown && (
           <div className="nav-dropdown">
             <div className="nav-dropdown-header">
-              <img src={auth.user.img} />
+              <img src={auth.user.pic} />
               <div>
                 <span style={{ fontSize: "20px" }}>{auth.user.name}</span>
                 <br></br>

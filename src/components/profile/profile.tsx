@@ -19,7 +19,7 @@ const Profile: React.FC<Props> = ({ OpenEditProfileFunc }) => {
         <div className="profile-header">
           <div className="profile-header-left">
             <div className="profile-name-container">
-              <img src={auth.user.img} />
+              <img src={auth.user.pic} />
               <div
                 style={{
                   display: "flex",
@@ -44,6 +44,7 @@ const Profile: React.FC<Props> = ({ OpenEditProfileFunc }) => {
                     {auth.user.subcount}
                   </span>
                 </span>
+                <span style={{ fontSize: "14px" }}>{auth.user.about}</span>
               </div>
             </div>
             <div className="profile-header-left-links">

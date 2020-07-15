@@ -40,9 +40,7 @@ const reducer = (state: any, action: any) => {
     case "update":
       return {
         ...state,
-        auth: {
-          user: {},
-        },
+        auth: action.auth,
       };
     default:
       return state;

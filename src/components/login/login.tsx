@@ -60,8 +60,8 @@ const Login: React.FC<Props> = ({}) => {
       <div className="login-main">
         <div className="login-container">
           <div className="login-header">
-            <span>You</span>
-            <span style={{ color: "#E53B38" }}>Tube</span>
+            <span>Hunt</span>
+            <span style={{ color: "#E53B38" }}>Upload</span>
             <AiFillYoutube
               style={{ color: "#E53B38", position: "relative", top: "8px" }}
             />
@@ -101,7 +101,7 @@ const Login: React.FC<Props> = ({}) => {
             <span
               onClick={() => history.push("/register")}
               className="signup-link"
-              style={{ position: "relative", top: "40px" }}
+              style={{ position: "relative", top: "60px" }}
             >
               Dont have an account? Sign up here
             </span>
