@@ -11,7 +11,9 @@ import Signup from "./components/signup/signup";
 import Profile from "./components/profile/profile";
 import Backdrop from "./components/backdrop/backdrop";
 import Editprofile from "./components/editprofile/editprofile";
+import UploadVideo from "./components/uploadvideo/uploadvideo";
 import ModalTransition from "././hooks/transition";
+import VideoModalTransition from "././hooks/videotransition";
 
 interface Props {}
 
@@ -19,6 +21,7 @@ const App: React.FC<Props> = ({}) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
+  const [uploadModal, setUploadModal] = useState(true);
 
   const OpenEditProfileFunc = () => {
     setEditProfileModal(true);
@@ -28,6 +31,13 @@ const App: React.FC<Props> = ({}) => {
   const CloseEditProfileFunc = () => {
     setEditProfileModal(false);
     setBackdrop(false);
+    setUploadModal(false);
+  };
+
+  const OpenUploadModal = () => {
+    setUploadModal(true);
+    setBackdrop(true);
+    console.log("modal");
   };
 
   return (
@@ -38,13 +48,20 @@ const App: React.FC<Props> = ({}) => {
           <ModalTransition editProfileModal={editProfileModal}>
             {editProfileModal && <Editprofile />}
           </ModalTransition>
+          <VideoModalTransition uploadModal={uploadModal}>
+            {uploadModal && <UploadVideo />}
+          </VideoModalTransition>
           {/* HOME ROUTE */}
           <Route
             exact
             path="/"
             render={() => (
               <>
-                <Navbar dropdown={dropdown} setDropdown={setDropdown} />
+                <Navbar
+                  OpenUploadModal={OpenUploadModal}
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Home />
@@ -52,7 +69,6 @@ const App: React.FC<Props> = ({}) => {
               </>
             )}
           ></Route>
-
           {/* LOGIN ROUTE */}
           <Route
             exact
@@ -63,7 +79,6 @@ const App: React.FC<Props> = ({}) => {
               </>
             )}
           ></Route>
-
           {/* SIGNUP ROUTE */}
           <Route
             exact
@@ -74,14 +89,17 @@ const App: React.FC<Props> = ({}) => {
               </>
             )}
           ></Route>
-
           {/* SUBSCRIPTION ROUTE */}
           <Route
             exact
             path="/subs"
             render={() => (
               <>
-                <Navbar dropdown={dropdown} setDropdown={setDropdown} />
+                <Navbar
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
+                  OpenUploadModal={OpenUploadModal}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Subscriptions />
@@ -95,7 +113,11 @@ const App: React.FC<Props> = ({}) => {
             path="/profile"
             render={() => (
               <>
-                <Navbar dropdown={dropdown} setDropdown={setDropdown} />
+                <Navbar
+                  OpenUploadModal={OpenUploadModal}
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Profile OpenEditProfileFunc={OpenEditProfileFunc} />
@@ -103,14 +125,17 @@ const App: React.FC<Props> = ({}) => {
               </>
             )}
           ></Route>
-
           {/* LIKES ROUTE */}
           <Route
             exact
             path="/likes"
             render={() => (
               <>
-                <Navbar dropdown={dropdown} setDropdown={setDropdown} />
+                <Navbar
+                  OpenUploadModal={OpenUploadModal}
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Likes />

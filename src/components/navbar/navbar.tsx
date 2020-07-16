@@ -13,9 +13,14 @@ import { Link, useHistory } from "react-router-dom";
 interface Props {
   setDropdown: SetDropDown;
   dropdown: boolean;
+  OpenUploadModal: () => void;
 }
 
-const Navbar: React.FC<Props> = ({ setDropdown, dropdown }) => {
+const Navbar: React.FC<Props> = ({
+  setDropdown,
+  dropdown,
+  OpenUploadModal,
+}) => {
   const [{ auth }, dispatch] = useStateValue();
   const history = useHistory();
 
@@ -62,6 +67,7 @@ const Navbar: React.FC<Props> = ({ setDropdown, dropdown }) => {
         </div>
         <div className="right-container">
           <MdVideoCall
+            onClick={() => OpenUploadModal()}
             style={{
               fontSize: "30px",
               position: "relative",
