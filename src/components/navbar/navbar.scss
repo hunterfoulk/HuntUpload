@@ -2,7 +2,7 @@
 
 .navbar {
   display: flex;
-  background-color: rgb(58, 58, 58);
+  background-color: rgb(49, 49, 49);
   width: 100%;
   height: 60px;
   color: white;
@@ -66,6 +66,7 @@
     border-right: 1px solid grey;
     border-left: 1px solid grey;
     border-bottom: 1px solid grey;
+    z-index: 500;
     .nav-dropdown-header {
       display: flex;
       align-items: center;

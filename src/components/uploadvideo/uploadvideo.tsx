@@ -5,10 +5,14 @@ import { BsPlayFill } from "react-icons/bs";
 import { IoMdPause } from "react-icons/io";
 import { BsFillVolumeUpFill } from "react-icons/bs";
 import ReactPlayer from "react-player/lazy";
+import useInput from "../../hooks/useInput";
+import { useStateValue } from "../../state";
+import axios from "axios";
 
 interface Props {}
 
 const UploadVideo: React.FC<Props> = ({}) => {
+  const [{ auth }, dispatch] = useStateValue();
   const [video, setVideo] = useState<any>("");
   const [videoFile, setVideoFile] = useState<any>("");
   const [isPlaying, setPlaying] = useState(false);
@@ -16,13 +20,14 @@ const UploadVideo: React.FC<Props> = ({}) => {
   const [played, setPlayed] = useState(0);
   const [seeking, setSeeking] = useState(false);
   const playerRef = useRef<any>(null);
+  const title = useInput("");
+  const description = useInput("");
 
   const SelectVideoHandler = async (e: any) => {
     let reader = new FileReader();
     const file = e.target.files[0];
 
     if (file) {
-      // setVideo(file);
       console.log("this is the video", e.target.value);
 
       reader.onloadend = () => {
@@ -58,6 +63,43 @@ const UploadVideo: React.FC<Props> = ({}) => {
     playerRef.current.seekTo(parseFloat(e.target.value));
   };
 
+  const HandleVideoUpload = async (e: any) => {
+    e.preventDefault();
+    let user_id = auth.user.user_id;
+    let uploader = auth.user.name;
+    let uploaderPic = auth.user.pic;
+
+    let formData = new FormData();
+
+    formData.append("user_id", user_id);
+    formData.append("uploader", uploader);
+    formData.append("uploaderPic", uploaderPic);
+    formData.append("videoFile", videoFile);
+    formData.append("title", title.value);
+    formData.append("description", description.value);
+
+    let headers = {
+      "Content-Type": "multipart/form-data",
+    };
+
+    await axios
+      .post(
+        "http://localhost:9000/.netlify/functions/server/youtube/upload",
+        formData,
+        {
+          headers: headers,
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log("response", res);
+        console.log("new video uploaded to database");
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  };
+
   return (
     <>
       <div className="upload-video-modal">
@@ -72,7 +114,7 @@ const UploadVideo: React.FC<Props> = ({}) => {
             onChange={SelectVideoHandler}
             style={{ display: "none" }}
           />
-          <button>
+          <button onClick={HandleVideoUpload}>
             Upload <FiUpload style={{ position: "relative", top: "2px" }} />
           </button>
         </div>
@@ -80,9 +122,16 @@ const UploadVideo: React.FC<Props> = ({}) => {
           {video ? (
             <>
               <span style={{ color: "white" }}>Title</span>
-              <input type="text" />
+              <input
+                value={title.value}
+                onChange={title.onChange}
+                type="text"
+              />
               <span style={{ color: "white" }}>Description</span>
-              <textarea />
+              <textarea
+                value={description.value}
+                onChange={description.onChange}
+              />
             </>
           ) : null}
           <div className="preview-video-container">

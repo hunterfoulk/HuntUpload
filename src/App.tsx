@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./app.scss";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/navbar/navbar";
@@ -14,6 +14,9 @@ import Editprofile from "./components/editprofile/editprofile";
 import UploadVideo from "./components/uploadvideo/uploadvideo";
 import ModalTransition from "././hooks/transition";
 import VideoModalTransition from "././hooks/videotransition";
+import WatchVideo from "./components/watchvideo/watchvideo";
+import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
 interface Props {}
 
@@ -21,7 +24,11 @@ const App: React.FC<Props> = ({}) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
-  const [uploadModal, setUploadModal] = useState(true);
+  const [uploadModal, setUploadModal] = useState(false);
+  const [videoContent, setVideoContent] = useState<any>(null);
+  const [allVideos, setAllVideos] = useState<any>([]);
+  const [video, setVideo] = useState<any>({});
+  const history = useHistory();
 
   const OpenEditProfileFunc = () => {
     setEditProfileModal(true);
@@ -39,6 +46,47 @@ const App: React.FC<Props> = ({}) => {
     setBackdrop(true);
     console.log("modal");
   };
+
+  // GET ALL VIDEOS //
+  const GetAllVideos = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:9000/.netlify/functions/server/youtube/allvideos"
+      );
+      const jsonData = await response.json();
+
+      setAllVideos(jsonData);
+      console.log("all videos", jsonData);
+      console.log("fired");
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  console.log("vid content", videoContent);
+
+  // CURRENT VIDEO //
+  const handleVideoRequest = async () => {
+    console.log("video content", videoContent);
+    const queryParams = { params: { videoContent } };
+    await axios
+      .get(
+        "http://localhost:9000/.netlify/functions/server/youtube/currentvideo",
+        queryParams
+      )
+      .then((res) => {
+        console.log("response for video", res);
+        setVideo(res.data);
+        console.log("data comments", res.data.comments);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  };
+
+  useEffect(() => {
+    handleVideoRequest();
+  }, [videoContent]);
 
   return (
     <>
@@ -120,7 +168,10 @@ const App: React.FC<Props> = ({}) => {
                 />
                 <div className="home-container">
                   <Sidebar />
-                  <Profile OpenEditProfileFunc={OpenEditProfileFunc} />
+                  <Profile
+                    OpenEditProfileFunc={OpenEditProfileFunc}
+                    setVideoContent={setVideoContent}
+                  />
                 </div>
               </>
             )}
@@ -139,6 +190,31 @@ const App: React.FC<Props> = ({}) => {
                 <div className="home-container">
                   <Sidebar />
                   <Likes />
+                </div>
+              </>
+            )}
+          ></Route>
+
+          <Route
+            exact
+            path="/video"
+            render={() => (
+              <>
+                <Navbar
+                  OpenUploadModal={OpenUploadModal}
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
+                />
+                <div className="home-container">
+                  <Sidebar />
+                  <WatchVideo
+                    video={video}
+                    GetAllVideos={GetAllVideos}
+                    allVideos={allVideos}
+                    setVideoContent={setVideoContent}
+                    videoContent={videoContent}
+                    handleVideoRequest={handleVideoRequest}
+                  />
                 </div>
               </>
             )}

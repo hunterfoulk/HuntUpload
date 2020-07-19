@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./editprofile.scss";
 import { useStateValue } from "../../state";
-import Banner from "../../images/bannertest.jpg";
 import useInput from "../../hooks/useInput";
 import axios from "axios";
 

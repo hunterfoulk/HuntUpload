@@ -1,14 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./profile.scss";
-import Banner from "../../images/bannertest.jpg";
 import { useStateValue } from "../../state";
+import axios from "axios";
+import ReactPlayer from "react-player/lazy";
+import { Link, useHistory } from "react-router-dom";
 
 interface Props {
   OpenEditProfileFunc: () => void;
+  setVideoContent: setVideoContent;
 }
 
-const Profile: React.FC<Props> = ({ OpenEditProfileFunc }) => {
+const Profile: React.FC<Props> = ({ OpenEditProfileFunc, setVideoContent }) => {
   const [{ auth }, dispatch] = useStateValue();
+  const [videos, setVideos] = useState<any>([]);
+  const history = useHistory();
+
+  const GetVideos = async () => {
+    let user_id = parseFloat(auth.user.user_id);
+    const queryParams = { params: { user_id } };
+
+    axios
+      .get(
+        "http://localhost:9000/.netlify/functions/server/youtube/myvideos",
+        queryParams
+      )
+      .then((res) => {
+        console.log("data", res.data);
+
+        setVideos(res.data);
+      })
+      .catch((error) => console.error("videos not fetched succesfully", error));
+  };
+
+  useEffect(() => {
+    GetVideos();
+  }, []);
+
+  // const WatchVideo = (video: any) => {
+  //   console.log("video id ", video);
+  // };
 
   return (
     <>
@@ -60,6 +90,26 @@ const Profile: React.FC<Props> = ({ OpenEditProfileFunc }) => {
               </button>
             </div>
           </div>
+        </div>
+
+        <div className="videos-container">
+          {videos.map((video: any, i: number) => (
+            <>
+              <div
+                key={i}
+                onClick={async () => {
+                  setVideoContent(video.video_id);
+                  setTimeout(function () {
+                    history.push("/video");
+                  }, 500);
+                }}
+                className="each-video-container"
+              >
+                <ReactPlayer width="350px" height="200px" url={video.link} />
+                <span>{video.title}</span>
+              </div>
+            </>
+          ))}
         </div>
       </div>
     </>
