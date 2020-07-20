@@ -15,6 +15,7 @@ import UploadVideo from "./components/uploadvideo/uploadvideo";
 import ModalTransition from "././hooks/transition";
 import VideoModalTransition from "././hooks/videotransition";
 import WatchVideo from "./components/watchvideo/watchvideo";
+import { useStateValue } from "../src/state";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -29,6 +30,8 @@ const App: React.FC<Props> = ({}) => {
   const [allVideos, setAllVideos] = useState<any>([]);
   const [video, setVideo] = useState<any>({});
   const history = useHistory();
+  const [{ auth }, dispatch] = useStateValue();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const OpenEditProfileFunc = () => {
     setEditProfileModal(true);
@@ -56,14 +59,10 @@ const App: React.FC<Props> = ({}) => {
       const jsonData = await response.json();
 
       setAllVideos(jsonData);
-      console.log("all videos", jsonData);
-      console.log("fired");
     } catch (error) {
       console.error(error.message);
     }
   };
-
-  console.log("vid content", videoContent);
 
   // CURRENT VIDEO //
   const handleVideoRequest = async () => {
@@ -75,9 +74,7 @@ const App: React.FC<Props> = ({}) => {
         queryParams
       )
       .then((res) => {
-        console.log("response for video", res);
         setVideo(res.data);
-        console.log("data comments", res.data.comments);
       })
       .catch((error) => {
         console.error("error", error);
@@ -87,6 +84,76 @@ const App: React.FC<Props> = ({}) => {
   useEffect(() => {
     handleVideoRequest();
   }, [videoContent]);
+
+  console.log("liked state", isLiked);
+
+  const handleLikeVideo = async (video: any) => {
+    let video_id = parseInt(video.video_id);
+    let user_id = parseInt(auth.user.user_id);
+
+    console.log(video);
+    video.likes++;
+
+    console.log(video.likes);
+    let newLikes = video.likes;
+    let newLikedVid = video;
+
+    await axios
+      .post(
+        "http://localhost:9000/.netlify/functions/server/youtube/updatelikes",
+        {
+          video_id: video_id,
+          user_id: user_id,
+          newLikes: newLikes,
+          newLikedVid: newLikedVid,
+        }
+      )
+      .then((res) => {
+        let user = res.data.payload;
+        console.log("video like data", res);
+        console.log("payload", res.data.payload);
+        setVideoContent(video);
+
+        dispatch({
+          type: "update",
+          auth: {
+            user: user,
+          },
+        });
+        setIsLiked(true);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  // const videoIsLiked = () => {
+  //   if (auth.user.likes.indexOf(video.video_id)) {
+  //     console.log("VIDEO IS IN LIKES", video.video_id);
+  //     setIsLiked(true);
+  //     console.log("my likes", auth.user.likes);
+  //   } else {
+  //     console.log("VIDEO IS NOT IN LIKES");
+  //     setIsLiked(false);
+  //   }
+  // };
+
+  const videoIsLiked = () => {
+    if (
+      auth.user.likes.some(
+        (likedVideo: any) => likedVideo.video_id === video.video_id
+      )
+    ) {
+      console.log("Object found inside the array.", video.video_id);
+
+      setIsLiked(true);
+    } else {
+      console.log("Object not found.");
+      setIsLiked(false);
+    }
+  };
+
+  useEffect(() => {
+    videoIsLiked();
+  }, [video]);
 
   return (
     <>
@@ -208,6 +275,10 @@ const App: React.FC<Props> = ({}) => {
                 <div className="home-container">
                   <Sidebar />
                   <WatchVideo
+                    videoIsLiked={videoIsLiked}
+                    setIsLiked={setIsLiked}
+                    isLiked={isLiked}
+                    handleLikeVideo={handleLikeVideo}
                     video={video}
                     GetAllVideos={GetAllVideos}
                     allVideos={allVideos}

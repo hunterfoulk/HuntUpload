@@ -19,6 +19,10 @@ interface Props {
   GetAllVideos: () => void;
   handleVideoRequest: () => void;
   video: any;
+  handleLikeVideo: (video: any) => void;
+  setIsLiked: setIsLiked;
+  isLiked: boolean;
+  videoIsLiked: () => void;
 }
 
 interface Comment {
@@ -34,6 +38,10 @@ const Watchvideo: React.FC<Props> = ({
   GetAllVideos,
   handleVideoRequest,
   video,
+  handleLikeVideo,
+  isLiked,
+  setIsLiked,
+  videoIsLiked,
 }) => {
   const history = useHistory();
   const [{ auth }, dispatch] = useStateValue();
@@ -41,6 +49,7 @@ const Watchvideo: React.FC<Props> = ({
   const [volume, setVolume] = useState(20);
   const [played, setPlayed] = useState(0);
   const [seeking, setSeeking] = useState(false);
+
   const playerRef = useRef<any>(null);
   const [comment, setComment] = useState<Comment>({
     name: auth.user.name,
@@ -97,12 +106,26 @@ const Watchvideo: React.FC<Props> = ({
   };
 
   // CURRENT VIDEO REQUEST //
-
   useEffect(() => {
     console.log("fireddd");
     handleVideoRequest();
     GetAllVideos();
+    videoIsLiked();
   }, [videoContent]);
+
+  // const videoIsLiked = () => {
+  //   if (
+  //     auth.user.likes.some(
+  //       (likedVideo: any) => likedVideo.video_id === video.video_id
+  //     )
+  //   ) {
+  //     console.log("Object found inside the array.", video.video_id);
+
+  //     setIsLiked(true);
+  //   } else {
+  //     console.log("Object not found.");
+  //   }
+  // };
 
   return (
     <>
@@ -213,13 +236,27 @@ const Watchvideo: React.FC<Props> = ({
               <div style={{ marginRight: "15px" }}>
                 <span>
                   {" "}
-                  <AiFillLike
-                    style={{
-                      position: "relative",
-                      top: "2",
-                      marginRight: "5px",
-                    }}
-                  />
+                  {isLiked ? (
+                    <AiFillLike
+                      onClick={() => handleLikeVideo(video)}
+                      style={{
+                        position: "relative",
+                        top: "2",
+                        marginRight: "5px",
+                        color: "blue",
+                      }}
+                    />
+                  ) : (
+                    <AiFillLike
+                      onClick={() => handleLikeVideo(video)}
+                      style={{
+                        position: "relative",
+                        top: "2",
+                        marginRight: "5px",
+                        color: "white",
+                      }}
+                    />
+                  )}
                   {video.likes}
                 </span>
               </div>
@@ -247,7 +284,7 @@ const Watchvideo: React.FC<Props> = ({
                   {/* {video.subscribers} */}
                 </div>
               </div>
-              <button>Subscribe</button>
+              <button onClick={videoIsLiked}>Subscribe</button>
             </div>
             <div className="description-container">
               <p style={{ color: "white" }}>{video.description}</p>

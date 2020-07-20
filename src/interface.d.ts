@@ -28,8 +28,16 @@ interface Video {
   video: any;
 }
 
+interface isLiked {
+  isliked: boolean;
+}
+
 interface CloseEditProfileFunc {
   CloseEditProfileFunc: () => void;
+}
+
+interface handleLikeVideo {
+  handleLikeVideo: () => void;
 }
 
 interface handleVideoRequest {
@@ -48,6 +56,10 @@ interface GetAllVideos {
   GetAllVideos: () => void;
 }
 
+interface videoIsLiked {
+  videoIsLiked: () => void;
+}
+
 type SetDropDown = Dispatch<Dropdown>;
 
 type setEditProfileModal = Dispatch<setEditProfileModal>;
@@ -59,3 +71,5 @@ type setVideoContent = Dispatch<setVideoContent>;
 type setAllVideos = Dispatch<setAllVideos>;
 
 type setVideo = Dispatch<setVideo>;
+
+type setIsLiked = Dispatch<setIsLiked>;
