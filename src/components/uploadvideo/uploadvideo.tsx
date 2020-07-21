@@ -8,6 +8,8 @@ import ReactPlayer from "react-player/lazy";
 import useInput from "../../hooks/useInput";
 import { useStateValue } from "../../state";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {}
 
@@ -22,6 +24,8 @@ const UploadVideo: React.FC<Props> = ({}) => {
   const playerRef = useRef<any>(null);
   const title = useInput("");
   const description = useInput("");
+
+  const notify = () => toast("Upload finished.");
 
   const SelectVideoHandler = async (e: any) => {
     let reader = new FileReader();
@@ -94,6 +98,7 @@ const UploadVideo: React.FC<Props> = ({}) => {
       .then((res) => {
         console.log("response", res);
         console.log("new video uploaded to database");
+        notify();
       })
       .catch((error) => {
         console.error("error", error);

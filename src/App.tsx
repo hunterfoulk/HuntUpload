@@ -18,6 +18,8 @@ import WatchVideo from "./components/watchvideo/watchvideo";
 import { useStateValue } from "../src/state";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {}
 
@@ -32,6 +34,7 @@ const App: React.FC<Props> = ({}) => {
   const history = useHistory();
   const [{ auth }, dispatch] = useStateValue();
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isDisliked, setIsDisliked] = useState<boolean>(false);
 
   const OpenEditProfileFunc = () => {
     setEditProfileModal(true);
@@ -87,54 +90,146 @@ const App: React.FC<Props> = ({}) => {
 
   console.log("liked state", isLiked);
 
+  //////////////// HANDLE LIKE ///////////////////
   const handleLikeVideo = async (video: any) => {
     let video_id = parseInt(video.video_id);
     let user_id = parseInt(auth.user.user_id);
 
     console.log(video);
-    video.likes++;
 
     console.log(video.likes);
-    let newLikes = video.likes;
-    let newLikedVid = video;
 
-    await axios
-      .post(
-        "http://localhost:9000/.netlify/functions/server/youtube/updatelikes",
-        {
-          video_id: video_id,
-          user_id: user_id,
-          newLikes: newLikes,
-          newLikedVid: newLikedVid,
-        }
-      )
-      .then((res) => {
-        let user = res.data.payload;
-        console.log("video like data", res);
-        console.log("payload", res.data.payload);
-        setVideoContent(video);
+    if (isLiked) {
+      video.likes--;
+      let newLikes = video.likes;
+      let newLikedVid = video;
+      console.log("video likes", video.likes);
 
-        dispatch({
-          type: "update",
-          auth: {
-            user: user,
-          },
-        });
-        setIsLiked(true);
-      })
-      .catch((error) => console.log(error));
+      await axios
+        .post(
+          "http://localhost:9000/.netlify/functions/server/youtube/deletelike",
+          {
+            video_id: video_id,
+            user_id: user_id,
+            newLikes: newLikes,
+            newLikedVid: newLikedVid,
+          }
+        )
+        .then((res) => {
+          let user = res.data.payload;
+          console.log("video like data", res);
+          console.log("payload", res.data.payload);
+          localStorage.setItem("user", JSON.stringify(user));
+          setVideoContent(video);
+
+          dispatch({
+            type: "update",
+            auth: {
+              user: user,
+            },
+          });
+          setIsLiked(false);
+        })
+        .catch((error) => console.log(error));
+    } else {
+      video.likes++;
+      let newLikes = video.likes;
+      let newLikedVid = video;
+      console.log("video likes", video.likes);
+      await axios
+
+        .post(
+          "http://localhost:9000/.netlify/functions/server/youtube/updatelikes",
+          {
+            video_id: video_id,
+            user_id: user_id,
+            newLikes: newLikes,
+            newLikedVid: newLikedVid,
+          }
+        )
+        .then((res) => {
+          let user = res.data.payload;
+          console.log("video like data", res);
+          console.log("payload", res.data.payload);
+          localStorage.setItem("user", JSON.stringify(user));
+          setVideoContent(video);
+
+          dispatch({
+            type: "update",
+            auth: {
+              user: user,
+            },
+          });
+          setIsLiked(true);
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
-  // const videoIsLiked = () => {
-  //   if (auth.user.likes.indexOf(video.video_id)) {
-  //     console.log("VIDEO IS IN LIKES", video.video_id);
-  //     setIsLiked(true);
-  //     console.log("my likes", auth.user.likes);
-  //   } else {
-  //     console.log("VIDEO IS NOT IN LIKES");
-  //     setIsLiked(false);
-  //   }
-  // };
+  //////////////// HANDLE DISLIKE ///////////////////
+  const handleDislike = async (video: any) => {
+    let video_id = parseInt(video.video_id);
+    let user_id = parseInt(auth.user.user_id);
+
+    if (isLiked) {
+      video.likes--;
+      video.dislikes++;
+
+      let newLikes = video.likes;
+      let newDislikes = video.dislikes;
+      let newDislikedVid = video;
+      console.log("video likes", video.likes);
+      console.log("video dislikes", video.dislikes);
+
+      await axios
+        .post(
+          "http://localhost:9000/.netlify/functions/server/youtube/switchlikes",
+          {
+            video_id: video_id,
+            user_id: user_id,
+            newLikes: newLikes,
+            newDislikes: newDislikes,
+          }
+        )
+        .then((res) => {
+          let user = res.data.payload;
+          console.log("video like data", res);
+          localStorage.setItem("user", JSON.stringify(user));
+          console.log("payload", res.data.payload);
+          setVideoContent(video);
+
+          dispatch({
+            type: "update",
+            auth: {
+              user: user,
+            },
+          });
+          setIsLiked(false);
+          setIsDisliked(true);
+        })
+        .catch((error) => console.log(error));
+    } else {
+      video.dislikes++;
+      let newDislikes = video.dislikes;
+      console.log("video dislikes", video.dislikes);
+      console.log("video", video);
+
+      await axios
+        .post(
+          "http://localhost:9000/.netlify/functions/server/youtube/dislikevideo",
+          {
+            video_id: video_id,
+            newDislikes: newDislikes,
+          }
+        )
+        .then((res) => {
+          console.log("response", res);
+          setIsLiked(false);
+          setIsDisliked(true);
+        })
+        .catch((error) => console.log(error));
+    }
+  };
 
   const videoIsLiked = () => {
     if (
@@ -151,13 +246,40 @@ const App: React.FC<Props> = ({}) => {
     }
   };
 
-  useEffect(() => {
-    videoIsLiked();
-  }, [video]);
+  ///////////// HANDLE SUBSCRIBE /////////////
+  const handleSubscribe = async (video: any) => {
+    console.log("user id", video.user_id);
+    let videoUser = parseInt(video.user_id);
+    let user_id = parseInt(auth.user.user_id);
+
+    await axios
+      .post(
+        "http://localhost:9000/.netlify/functions/server/youtube/subscribe",
+        {
+          videoUser: videoUser,
+          user_id: user_id,
+        }
+      )
+      .then((res) => {
+        let user = res.data.payload;
+        console.log("subsriber user data", res);
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log("payload", res.data.payload);
+
+        dispatch({
+          type: "update",
+          auth: {
+            user: user,
+          },
+        });
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <>
       <Router>
+        <ToastContainer />
         {backdrop && <Backdrop CloseEditProfileFunc={CloseEditProfileFunc} />}
         <div className="page-container">
           <ModalTransition editProfileModal={editProfileModal}>
@@ -256,7 +378,7 @@ const App: React.FC<Props> = ({}) => {
                 />
                 <div className="home-container">
                   <Sidebar />
-                  <Likes />
+                  <Likes setVideoContent={setVideoContent} />
                 </div>
               </>
             )}
@@ -275,6 +397,9 @@ const App: React.FC<Props> = ({}) => {
                 <div className="home-container">
                   <Sidebar />
                   <WatchVideo
+                    handleSubscribe={handleSubscribe}
+                    isDisliked={isDisliked}
+                    handleDislike={handleDislike}
                     videoIsLiked={videoIsLiked}
                     setIsLiked={setIsLiked}
                     isLiked={isLiked}

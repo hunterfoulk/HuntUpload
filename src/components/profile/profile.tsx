@@ -36,10 +36,6 @@ const Profile: React.FC<Props> = ({ OpenEditProfileFunc, setVideoContent }) => {
     GetVideos();
   }, []);
 
-  // const WatchVideo = (video: any) => {
-  //   console.log("video id ", video);
-  // };
-
   return (
     <>
       <div className="profile-container">

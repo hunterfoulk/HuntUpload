@@ -36,8 +36,16 @@ interface CloseEditProfileFunc {
   CloseEditProfileFunc: () => void;
 }
 
+interface handleSubscribe {
+  handleSubscribe: () => void;
+}
+
 interface handleLikeVideo {
   handleLikeVideo: () => void;
+}
+
+interface handleDislike {
+  handleDislike: () => void;
 }
 
 interface handleVideoRequest {

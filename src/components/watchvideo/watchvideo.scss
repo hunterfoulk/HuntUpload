@@ -5,6 +5,7 @@
   background-color: #191919;
   flex-direction: row;
   //   align-items: center;
+  margin-bottom: 20px;
   .video-page-left-container {
     display: flex;
     align-items: center;
@@ -39,12 +40,13 @@
           height: 5px;
           outline: none;
           border-radius: 5px;
-          width: 60px;
+          width: 40%;
           border: 1px solid black;
           background: #d3d3d3;
           position: relative;
           bottom: 2px;
           cursor: pointer;
+          // background-color: red;
         }
         .range-slider-seek {
           -webkit-appearance: none;
@@ -52,7 +54,7 @@
           height: 5px;
           outline: none;
           border-radius: 5px;
-          width: 800px;
+          width: 100%;
           border: 1px solid black;
           background: #d3d3d3;
           cursor: pointer;
@@ -203,10 +205,14 @@
         margin-top: 5px;
         // background-color: rgb(187, 99, 99);
         button {
-          background-color: rgb(229, 59, 56);
+          background-color: #cc0000;
           color: white;
-          border: rgb(229, 59, 56);
-          height: 30px;
+          font-size: 16px;
+          border: #cc0000;
+          height: 35px;
+          padding: 0px 13px;
+          // width: 100px;
+          border-radius: 2px;
           outline: none;
           cursor: pointer;
         }

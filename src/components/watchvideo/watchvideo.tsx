@@ -23,6 +23,9 @@ interface Props {
   setIsLiked: setIsLiked;
   isLiked: boolean;
   videoIsLiked: () => void;
+  handleDislike: (video: any) => void;
+  isDisliked: boolean;
+  handleSubscribe: (video: any) => void;
 }
 
 interface Comment {
@@ -42,6 +45,9 @@ const Watchvideo: React.FC<Props> = ({
   isLiked,
   setIsLiked,
   videoIsLiked,
+  handleDislike,
+  isDisliked,
+  handleSubscribe,
 }) => {
   const history = useHistory();
   const [{ auth }, dispatch] = useStateValue();
@@ -113,19 +119,9 @@ const Watchvideo: React.FC<Props> = ({
     videoIsLiked();
   }, [videoContent]);
 
-  // const videoIsLiked = () => {
-  //   if (
-  //     auth.user.likes.some(
-  //       (likedVideo: any) => likedVideo.video_id === video.video_id
-  //     )
-  //   ) {
-  //     console.log("Object found inside the array.", video.video_id);
-
-  //     setIsLiked(true);
-  //   } else {
-  //     console.log("Object not found.");
-  //   }
-  // };
+  useEffect(() => {
+    videoIsLiked();
+  }, [video]);
 
   return (
     <>
@@ -166,12 +162,18 @@ const Watchvideo: React.FC<Props> = ({
                     onMouseUp={handleMouseUp}
                   />
 
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                    }}
+                  >
                     <BsFillVolumeUpFill
                       style={{
                         color: "white",
                         position: "relative",
-                        top: "2.5px",
+                        bottom: "1.5px",
                       }}
                     />
                     {/* volume slider */}
@@ -206,12 +208,18 @@ const Watchvideo: React.FC<Props> = ({
                     onMouseUp={handleMouseUp}
                   />
 
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                    }}
+                  >
                     <BsFillVolumeUpFill
                       style={{
                         color: "white",
                         position: "relative",
-                        top: "2.5px",
+                        bottom: "1.5px",
                       }}
                     />
                     {/* volume slider */}
@@ -243,7 +251,8 @@ const Watchvideo: React.FC<Props> = ({
                         position: "relative",
                         top: "2",
                         marginRight: "5px",
-                        color: "blue",
+                        color: "#3EA6FF",
+                        cursor: "pointer",
                       }}
                     />
                   ) : (
@@ -254,6 +263,7 @@ const Watchvideo: React.FC<Props> = ({
                         top: "2",
                         marginRight: "5px",
                         color: "white",
+                        cursor: "pointer",
                       }}
                     />
                   )}
@@ -262,13 +272,28 @@ const Watchvideo: React.FC<Props> = ({
               </div>
               <div>
                 <span>
-                  <AiFillDislike
-                    style={{
-                      position: "relative",
-                      top: "3",
-                      marginRight: "5px",
-                    }}
-                  />
+                  {isDisliked ? (
+                    <AiFillDislike
+                      onClick={() => handleDislike(video)}
+                      style={{
+                        position: "relative",
+                        top: "3",
+                        marginRight: "5px",
+                        cursor: "pointer",
+                        color: "#db4b4b",
+                      }}
+                    />
+                  ) : (
+                    <AiFillDislike
+                      onClick={() => handleDislike(video)}
+                      style={{
+                        position: "relative",
+                        top: "3",
+                        marginRight: "5px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  )}
                   {video.dislikes}
                 </span>
               </div>
@@ -284,7 +309,7 @@ const Watchvideo: React.FC<Props> = ({
                   {/* {video.subscribers} */}
                 </div>
               </div>
-              <button onClick={videoIsLiked}>Subscribe</button>
+              <button onClick={() => handleSubscribe(video)}>Subscribe</button>
             </div>
             <div className="description-container">
               <p style={{ color: "white" }}>{video.description}</p>

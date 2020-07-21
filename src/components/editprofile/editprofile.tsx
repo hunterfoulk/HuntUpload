@@ -3,6 +3,8 @@ import "./editprofile.scss";
 import { useStateValue } from "../../state";
 import useInput from "../../hooks/useInput";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {}
 
@@ -14,6 +16,8 @@ const Editprofile: React.FC<Props> = ({}) => {
   const [bannerFile, setBannerFile] = useState<any>(auth.user.banner);
   const [pic, setPic] = useState<any>(auth.user.img);
   const [picFile, setPicFile] = useState<any>(auth.user.img);
+
+  const notify = () => toast("Profile updated.");
 
   const handleEditProfileBanner = async (e: any) => {
     let reader = new FileReader();
@@ -85,7 +89,9 @@ const Editprofile: React.FC<Props> = ({}) => {
             user: user,
           },
         });
+        notify();
       })
+
       .catch((error) => {
         console.error("error", error);
       });

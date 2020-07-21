@@ -20,6 +20,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-spring": "^8.0.27",
+    "react-toastify": "^6.0.8",
     "redux": "^4.0.5",
     "typescript": "^3.7.5",
     "video-react": "^0.14.1"
