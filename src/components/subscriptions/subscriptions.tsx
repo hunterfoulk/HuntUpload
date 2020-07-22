@@ -10,10 +10,19 @@ const Subscriptions: React.FC<Props> = ({}) => {
   return (
     <>
       <div className="subs-container">
-        <div>
-          <h1>Helloooo</h1>
+        <div className="subs-main">
           {auth.user.subscriptions.map((sub: any) => (
-            <span>{sub.name}</span>
+            <div className="sub">
+              <div className="sub-pic-container">
+                <img src={sub.pic} />
+              </div>
+              <div className="sub-name-container">
+                <span className="sub-name">{sub.name}</span>
+                <span style={{ color: "rgb(247, 247, 247)" }}>
+                  Subscribers:{sub.subcount}
+                </span>
+              </div>
+            </div>
           ))}
         </div>
       </div>

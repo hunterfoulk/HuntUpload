@@ -2,4 +2,43 @@
   display: flex;
   width: 100%;
   background-color: #191919;
+  justify-content: center;
+  .subs-main {
+    display: flex;
+    flex-direction: column;
+    // background-color: red;
+    width: 50%;
+    .sub {
+      display: flex;
+      flex-direction: row;
+      // width: 50%;
+      min-width: 50%;
+      max-width: 60%;
+      // background-color: green;
+      margin-top: 20px;
+      height: 100px;
+      // justify-content: center;
+      border-bottom: 1px solid grey;
+      .sub-pic-container {
+        display: flex;
+        width: 80px;
+        height: 80px;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+      .sub-name-container {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        // background-color: purple;
+        .sub-name {
+          font-size: 30px;
+          color: rgb(247, 247, 247);
+        }
+      }
+    }
+  }
 }
