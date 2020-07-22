@@ -30,6 +30,7 @@ const App: React.FC<Props> = ({}) => {
   const [video, setVideo] = useState<any>({});
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isDisliked, setIsDisliked] = useState<boolean>(false);
+  const [isSubbed, setIsSubbed] = useState<boolean>(false);
 
   const OpenEditProfileFunc = () => {
     dispatch({
@@ -260,6 +261,19 @@ const App: React.FC<Props> = ({}) => {
     }
   };
 
+  const isSubscribed = () => {
+    if (
+      auth.user.subscriptions.some((vid: any) => vid.user_id === video.user_id)
+    ) {
+      console.log("IS SUBSCRIBED", video.user_id);
+      setIsSubbed(true);
+    } else {
+      console.log("IS NOT SUBSCRIBED");
+      setIsSubbed(false);
+      console.log("VIDEO USER ID", video.user_id);
+    }
+  };
+
   ///////////// HANDLE SUBSCRIBE /////////////
   const handleSubscribe = async (video: any) => {
     console.log("user id", video.user_id);
@@ -304,16 +318,19 @@ const App: React.FC<Props> = ({}) => {
           <VideoModalTransition uploadModal={components.uploadModal}>
             {components.uploadModal && <UploadVideo />}
           </VideoModalTransition>
-          <Navbar />
+
           {/* HOME ROUTE */}
           <Route
             exact
             path="/"
             render={() => (
-              <div className="home-container">
-                <Sidebar />
-                <Home />
-              </div>
+              <>
+                <Navbar />
+                <div className="home-container">
+                  <Sidebar />
+                  <Home />
+                </div>
+              </>
             )}
           ></Route>
           {/* LOGIN ROUTE */}
@@ -325,10 +342,13 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/subs"
             render={() => (
-              <div className="home-container">
-                <Sidebar />
-                <Subscriptions />
-              </div>
+              <>
+                <Navbar />
+                <div className="home-container">
+                  <Sidebar />
+                  <Subscriptions />
+                </div>
+              </>
             )}
           ></Route>
           {/* PROFILE ROUTE */}
@@ -350,34 +370,42 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/likes"
             render={() => (
-              <div className="home-container">
-                <Sidebar />
-                <Likes setVideoContent={setVideoContent} />
-              </div>
+              <>
+                <Navbar />
+                <div className="home-container">
+                  <Sidebar />
+                  <Likes setVideoContent={setVideoContent} />
+                </div>
+              </>
             )}
           ></Route>
           <Route
             exact
-            path="/video/videoid"
+            path="/video"
             render={() => (
-              <div className="home-container">
-                <Sidebar />
-                <WatchVideo
-                  handleSubscribe={handleSubscribe}
-                  isDisliked={isDisliked}
-                  handleDislike={handleDislike}
-                  videoIsLiked={videoIsLiked}
-                  setIsLiked={setIsLiked}
-                  isLiked={isLiked}
-                  handleLikeVideo={handleLikeVideo}
-                  video={video}
-                  GetAllVideos={GetAllVideos}
-                  allVideos={allVideos}
-                  setVideoContent={setVideoContent}
-                  videoContent={videoContent}
-                  handleVideoRequest={handleVideoRequest}
-                />
-              </div>
+              <>
+                <Navbar />
+                <div className="home-container">
+                  <Sidebar />
+                  <WatchVideo
+                    isSubscribed={isSubscribed}
+                    isSubbed={isSubbed}
+                    handleSubscribe={handleSubscribe}
+                    isDisliked={isDisliked}
+                    handleDislike={handleDislike}
+                    videoIsLiked={videoIsLiked}
+                    setIsLiked={setIsLiked}
+                    isLiked={isLiked}
+                    handleLikeVideo={handleLikeVideo}
+                    video={video}
+                    GetAllVideos={GetAllVideos}
+                    allVideos={allVideos}
+                    setVideoContent={setVideoContent}
+                    videoContent={videoContent}
+                    handleVideoRequest={handleVideoRequest}
+                  />
+                </div>
+              </>
             )}
           ></Route>
         </div>

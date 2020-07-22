@@ -44,6 +44,10 @@ interface handleLikeVideo {
   handleLikeVideo: () => void;
 }
 
+interface isSubscribed {
+  isSubscribed: () => void;
+}
+
 interface handleDislike {
   handleDislike: () => void;
 }
@@ -81,3 +85,5 @@ type setAllVideos = Dispatch<setAllVideos>;
 type setVideo = Dispatch<setVideo>;
 
 type setIsLiked = Dispatch<setIsLiked>;
+
+type setIsSubbed = Dispatch<setIsSubbed>;

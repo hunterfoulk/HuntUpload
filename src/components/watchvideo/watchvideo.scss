@@ -204,7 +204,7 @@
         height: 50px;
         margin-top: 5px;
         // background-color: rgb(187, 99, 99);
-        button {
+        .sub-button {
           background-color: #cc0000;
           color: white;
           font-size: 16px;
@@ -216,6 +216,19 @@
           outline: none;
           cursor: pointer;
         }
+        .sub-button-subbed {
+          background-color: #7777775d;
+          color: rgb(190, 190, 190);
+          font-size: 16px;
+          border: #777777a9;
+          height: 35px;
+          padding: 0px 13px;
+          // width: 100px;
+          border-radius: 2px;
+          outline: none;
+          cursor: pointer;
+        }
+
         img {
           width: 50px;
           height: 50px;

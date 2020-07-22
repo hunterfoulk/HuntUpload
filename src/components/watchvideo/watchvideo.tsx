@@ -26,6 +26,8 @@ interface Props {
   handleDislike: (video: any) => void;
   isDisliked: boolean;
   handleSubscribe: (video: any) => void;
+  isSubscribed: () => void;
+  isSubbed: any;
 }
 
 interface Comment {
@@ -48,6 +50,8 @@ const Watchvideo: React.FC<Props> = ({
   handleDislike,
   isDisliked,
   handleSubscribe,
+  isSubscribed,
+  isSubbed,
 }) => {
   const history = useHistory();
   const [{ auth }, dispatch] = useStateValue();
@@ -117,10 +121,12 @@ const Watchvideo: React.FC<Props> = ({
     handleVideoRequest();
     GetAllVideos();
     videoIsLiked();
+    isSubscribed();
   }, [videoContent]);
 
   useEffect(() => {
     videoIsLiked();
+    isSubscribed();
   }, [video]);
 
   return (
@@ -309,7 +315,27 @@ const Watchvideo: React.FC<Props> = ({
                   {/* {video.subscribers} */}
                 </div>
               </div>
-              <button onClick={() => handleSubscribe(video)}>Subscribe</button>
+              {isSubbed ? (
+                <button
+                  className="sub-button-subbed"
+                  onClick={() => handleSubscribe(video)}
+                >
+                  Unsubscribe
+                </button>
+              ) : (
+                <button
+                  className="sub-button"
+                  onClick={() => handleSubscribe(video)}
+                >
+                  Subscribe
+                </button>
+              )}
+              {/* <button
+                className="sub-button"
+                onClick={() => handleSubscribe(video)}
+              >
+                Subscribe
+              </button> */}
             </div>
             <div className="description-container">
               <p style={{ color: "white" }}>{video.description}</p>
