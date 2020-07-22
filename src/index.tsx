@@ -10,7 +10,14 @@ const initialState = {
     token: "",
     user: {},
   },
+  components: {
+    navdrop: false,
+    uploadModal: false,
+    profileModal: false,
+    backdrop: false
+  }
 };
+
 const user = localStorage.getItem("user");
 const token = localStorage.getItem("token");
 
@@ -42,6 +49,11 @@ const reducer = (state: any, action: any) => {
         ...state,
         auth: action.auth,
       };
+    case 'manage':
+      return {
+        ...state,
+        components: action.components
+      }
     default:
       return state;
   }

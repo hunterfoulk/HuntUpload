@@ -6,9 +6,9 @@ import useInput from "../../hooks/useInput";
 import { useStateValue } from "../../state";
 import axios from "axios";
 
-interface Props {}
+interface Props { }
 
-const Login: React.FC<Props> = ({}) => {
+const Login: React.FC<Props> = ({ }) => {
   const history = useHistory();
   const email = useInput("");
   const password = useInput("");
@@ -23,10 +23,7 @@ const Login: React.FC<Props> = ({}) => {
     };
 
     await axios
-      .post(
-        "http://localhost:9000/.netlify/functions/server/youtube/login",
-        payload
-      )
+      .post("http://localhost:9000/.netlify/functions/server/youtube/login", payload)
       .then((res) => {
         const user = res.data.payload;
         localStorage.setItem("token", res.data.token);
