@@ -11,32 +11,37 @@ import { useStateValue } from "../../state";
 import { Link, useHistory } from "react-router-dom";
 
 interface Props {
-  setDropdown: SetDropDown;
-  dropdown: boolean;
-  OpenUploadModal: () => void;
 }
 
-const Navbar: React.FC<Props> = ({
-  setDropdown,
-  dropdown,
-  OpenUploadModal,
-}) => {
-  const [{ auth }, dispatch] = useStateValue();
+const Navbar: React.FC<Props> = ({ }) => {
+  const [{ auth, components }, dispatch] = useStateValue();
   const history = useHistory();
 
   const profileRoute = (e: any) => {
-    setDropdown(false);
+    dispatch({
+      type: 'manage',
+      components: {
+        ...components,
+        navdrop: false
+      }
+    })
     history.push("/profile");
   };
 
-  const handleLogout = (e: any) => {
+  const handleLogout = async (e: any) => {
     localStorage.clear();
 
-    dispatch({
+    await dispatch({
       type: "logout",
     });
+    await dispatch({
+      type: 'manage',
+      components: {
+        ...components,
+        navdrop: false
+      }
+    })
 
-    setDropdown(false);
     history.push("/login");
   };
 
@@ -67,7 +72,16 @@ const Navbar: React.FC<Props> = ({
         </div>
         <div className="right-container">
           <MdVideoCall
-            onClick={() => OpenUploadModal()}
+            onClick={() => {
+              dispatch({
+                type: 'manage',
+                components: {
+                  ...components,
+                  uploadModal: true,
+                  backdrop: true
+                }
+              })
+            }}
             style={{
               fontSize: "30px",
               position: "relative",
@@ -86,9 +100,17 @@ const Navbar: React.FC<Props> = ({
             }}
           />
 
-          <img onClick={() => setDropdown(!dropdown)} src={auth.user.pic} />
+          <img onClick={() => {
+            dispatch({
+              type: 'manage',
+              components: {
+                ...components,
+                navdrop: !components.navdrop
+              }
+            })
+          }} src={auth.user.pic} />
         </div>
-        {dropdown && (
+        {components.navdrop && (
           <div className="nav-dropdown">
             <div className="nav-dropdown-header">
               <img src={auth.user.pic} />

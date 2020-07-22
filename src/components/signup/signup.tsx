@@ -6,9 +6,9 @@ import useInput from "../../hooks/useInput";
 import axios from "axios";
 import Defaultpic from "../../images/default.png";
 
-interface Props {}
+interface Props { }
 
-const Signup: React.FC<Props> = ({}) => {
+const Signup: React.FC<Props> = ({ }) => {
   const history = useHistory();
   const email = useInput("");
   const name = useInput("");

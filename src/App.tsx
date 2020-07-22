@@ -16,40 +16,53 @@ import ModalTransition from "././hooks/transition";
 import VideoModalTransition from "././hooks/videotransition";
 import WatchVideo from "./components/watchvideo/watchvideo";
 import { useStateValue } from "../src/state";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface Props {}
+interface Props { }
 
-const App: React.FC<Props> = ({}) => {
-  const [dropdown, setDropdown] = useState<boolean>(false);
-  const [editProfileModal, setEditProfileModal] = useState(false);
-  const [backdrop, setBackdrop] = useState(false);
-  const [uploadModal, setUploadModal] = useState(false);
+const App: React.FC<Props> = ({ }) => {
+  const [{ auth, components }, dispatch] = useStateValue();
   const [videoContent, setVideoContent] = useState<any>(null);
   const [allVideos, setAllVideos] = useState<any>([]);
   const [video, setVideo] = useState<any>({});
-  const history = useHistory();
-  const [{ auth }, dispatch] = useStateValue();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isDisliked, setIsDisliked] = useState<boolean>(false);
 
   const OpenEditProfileFunc = () => {
-    setEditProfileModal(true);
-    setBackdrop(true);
+    dispatch({
+      type: 'manage',
+      components: {
+        ...components,
+        backdrop: true,
+        profileModal: true
+      }
+    })
   };
 
   const CloseEditProfileFunc = () => {
-    setEditProfileModal(false);
-    setBackdrop(false);
-    setUploadModal(false);
+    dispatch({
+      type: 'manage',
+      components: {
+        ...components,
+        backdrop: false,
+        profileModal: false,
+        uploadModal: false
+      }
+    })
   };
 
   const OpenUploadModal = () => {
-    setUploadModal(true);
-    setBackdrop(true);
+    dispatch({
+      type: 'manage',
+      components: {
+        ...components,
+        backdrop: true,
+        uploadModal: true
+      }
+    })
     console.log("modal");
   };
 
@@ -280,30 +293,24 @@ const App: React.FC<Props> = ({}) => {
     <>
       <Router>
         <ToastContainer />
-        {backdrop && <Backdrop CloseEditProfileFunc={CloseEditProfileFunc} />}
+        {components.backdrop && <Backdrop CloseEditProfileFunc={CloseEditProfileFunc} />}
         <div className="page-container">
-          <ModalTransition editProfileModal={editProfileModal}>
-            {editProfileModal && <Editprofile />}
+          <ModalTransition editProfileModal={components.profileModal}>
+            {components.profileModal && <Editprofile />}
           </ModalTransition>
-          <VideoModalTransition uploadModal={uploadModal}>
-            {uploadModal && <UploadVideo />}
+          <VideoModalTransition uploadModal={components.uploadModal}>
+            {components.uploadModal && <UploadVideo />}
           </VideoModalTransition>
+          <Navbar />
           {/* HOME ROUTE */}
           <Route
             exact
             path="/"
             render={() => (
-              <>
-                <Navbar
-                  OpenUploadModal={OpenUploadModal}
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
-                />
-                <div className="home-container">
-                  <Sidebar />
-                  <Home />
-                </div>
-              </>
+              <div className="home-container">
+                <Sidebar />
+                <Home />
+              </div>
             )}
           ></Route>
           {/* LOGIN ROUTE */}
@@ -311,9 +318,7 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/login"
             render={() => (
-              <>
-                <Login />
-              </>
+              <Login />
             )}
           ></Route>
           {/* SIGNUP ROUTE */}
@@ -321,9 +326,7 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/register"
             render={() => (
-              <>
-                <Signup />
-              </>
+              <Signup />
             )}
           ></Route>
           {/* SUBSCRIPTION ROUTE */}
@@ -331,17 +334,10 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/subs"
             render={() => (
-              <>
-                <Navbar
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
-                  OpenUploadModal={OpenUploadModal}
-                />
-                <div className="home-container">
-                  <Sidebar />
-                  <Subscriptions />
-                </div>
-              </>
+              <div className="home-container">
+                <Sidebar />
+                <Subscriptions />
+              </div>
             )}
           ></Route>
           {/* PROFILE ROUTE */}
@@ -349,20 +345,13 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/profile"
             render={() => (
-              <>
-                <Navbar
-                  OpenUploadModal={OpenUploadModal}
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
+              <div className="home-container">
+                <Sidebar />
+                <Profile
+                  OpenEditProfileFunc={OpenEditProfileFunc}
+                  setVideoContent={setVideoContent}
                 />
-                <div className="home-container">
-                  <Sidebar />
-                  <Profile
-                    OpenEditProfileFunc={OpenEditProfileFunc}
-                    setVideoContent={setVideoContent}
-                  />
-                </div>
-              </>
+              </div>
             )}
           ></Route>
           {/* LIKES ROUTE */}
@@ -370,49 +359,34 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/likes"
             render={() => (
-              <>
-                <Navbar
-                  OpenUploadModal={OpenUploadModal}
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
-                />
-                <div className="home-container">
-                  <Sidebar />
-                  <Likes setVideoContent={setVideoContent} />
-                </div>
-              </>
+              <div className="home-container">
+                <Sidebar />
+                <Likes setVideoContent={setVideoContent} />
+              </div>
             )}
           ></Route>
-
           <Route
             exact
-            path="/video"
+            path="/video/videoid"
             render={() => (
-              <>
-                <Navbar
-                  OpenUploadModal={OpenUploadModal}
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
+              <div className="home-container">
+                <Sidebar />
+                <WatchVideo
+                  handleSubscribe={handleSubscribe}
+                  isDisliked={isDisliked}
+                  handleDislike={handleDislike}
+                  videoIsLiked={videoIsLiked}
+                  setIsLiked={setIsLiked}
+                  isLiked={isLiked}
+                  handleLikeVideo={handleLikeVideo}
+                  video={video}
+                  GetAllVideos={GetAllVideos}
+                  allVideos={allVideos}
+                  setVideoContent={setVideoContent}
+                  videoContent={videoContent}
+                  handleVideoRequest={handleVideoRequest}
                 />
-                <div className="home-container">
-                  <Sidebar />
-                  <WatchVideo
-                    handleSubscribe={handleSubscribe}
-                    isDisliked={isDisliked}
-                    handleDislike={handleDislike}
-                    videoIsLiked={videoIsLiked}
-                    setIsLiked={setIsLiked}
-                    isLiked={isLiked}
-                    handleLikeVideo={handleLikeVideo}
-                    video={video}
-                    GetAllVideos={GetAllVideos}
-                    allVideos={allVideos}
-                    setVideoContent={setVideoContent}
-                    videoContent={videoContent}
-                    handleVideoRequest={handleVideoRequest}
-                  />
-                </div>
-              </>
+              </div>
             )}
           ></Route>
         </div>
