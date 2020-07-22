@@ -21,9 +21,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface Props { }
+interface Props {}
 
-const App: React.FC<Props> = ({ }) => {
+const App: React.FC<Props> = ({}) => {
   const [{ auth, components }, dispatch] = useStateValue();
   const [videoContent, setVideoContent] = useState<any>(null);
   const [allVideos, setAllVideos] = useState<any>([]);
@@ -33,36 +33,36 @@ const App: React.FC<Props> = ({ }) => {
 
   const OpenEditProfileFunc = () => {
     dispatch({
-      type: 'manage',
+      type: "manage",
       components: {
         ...components,
         backdrop: true,
-        profileModal: true
-      }
-    })
+        profileModal: true,
+      },
+    });
   };
 
   const CloseEditProfileFunc = () => {
     dispatch({
-      type: 'manage',
+      type: "manage",
       components: {
         ...components,
         backdrop: false,
         profileModal: false,
-        uploadModal: false
-      }
-    })
+        uploadModal: false,
+      },
+    });
   };
 
   const OpenUploadModal = () => {
     dispatch({
-      type: 'manage',
+      type: "manage",
       components: {
         ...components,
         backdrop: true,
-        uploadModal: true
-      }
-    })
+        uploadModal: true,
+      },
+    });
     console.log("modal");
   };
 
@@ -149,6 +149,7 @@ const App: React.FC<Props> = ({ }) => {
       let newLikes = video.likes;
       let newLikedVid = video;
       console.log("video likes", video.likes);
+      console.log("test");
       await axios
 
         .post(
@@ -293,7 +294,9 @@ const App: React.FC<Props> = ({ }) => {
     <>
       <Router>
         <ToastContainer />
-        {components.backdrop && <Backdrop CloseEditProfileFunc={CloseEditProfileFunc} />}
+        {components.backdrop && (
+          <Backdrop CloseEditProfileFunc={CloseEditProfileFunc} />
+        )}
         <div className="page-container">
           <ModalTransition editProfileModal={components.profileModal}>
             {components.profileModal && <Editprofile />}
@@ -314,21 +317,9 @@ const App: React.FC<Props> = ({ }) => {
             )}
           ></Route>
           {/* LOGIN ROUTE */}
-          <Route
-            exact
-            path="/login"
-            render={() => (
-              <Login />
-            )}
-          ></Route>
+          <Route exact path="/login" render={() => <Login />}></Route>
           {/* SIGNUP ROUTE */}
-          <Route
-            exact
-            path="/register"
-            render={() => (
-              <Signup />
-            )}
-          ></Route>
+          <Route exact path="/register" render={() => <Signup />}></Route>
           {/* SUBSCRIPTION ROUTE */}
           <Route
             exact
