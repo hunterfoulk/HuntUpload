@@ -2,23 +2,30 @@ import React, { useState, useEffect } from "react";
 import "./profile.scss";
 import { useStateValue } from "../../state";
 import axios from "axios";
-import ReactPlayer from "react-player/lazy";
 import { Link, useHistory } from "react-router-dom";
+import Profilevideos from "../profile/profilevideos";
+import Profileabout from "../profile/profileabout";
+import Profilechannel from "../profile/profilechannels";
 
 interface Props {
   OpenEditProfileFunc: () => void;
-  setVideoContent: setVideoContent;
 }
 
-const Profile: React.FC<Props> = ({ OpenEditProfileFunc, setVideoContent }) => {
+const Profile: React.FC<Props> = ({ OpenEditProfileFunc }) => {
   const [{ auth }, dispatch] = useStateValue();
   const [videos, setVideos] = useState<any>([]);
   const history = useHistory();
+  const [tab, setTab] = useState("VIDEOS");
+
+  const activeTabStyle = {
+    borderBottom: "2px solid white",
+    color: "white",
+  };
 
   const GetVideos = async () => {
     let user_id = parseFloat(auth.user.user_id);
     const queryParams = { params: { user_id } };
-
+    console.log("user id ", auth.user.user_id);
     axios
       .get(
         "http://localhost:9000/.netlify/functions/server/youtube/myvideos",
@@ -70,13 +77,27 @@ const Profile: React.FC<Props> = ({ OpenEditProfileFunc, setVideoContent }) => {
                     {auth.user.subcount}
                   </span>
                 </span>
-                <span style={{ fontSize: "14px" }}>{auth.user.about}</span>
               </div>
             </div>
             <div className="profile-header-left-links">
-              <span>Videos</span>
-              <span>Subscribers</span>
-              <span>About</span>
+              <span
+                style={tab === "VIDEOS" ? activeTabStyle : {}}
+                onClick={() => setTab("VIDEOS")}
+              >
+                Videos
+              </span>
+              <span
+                style={tab === "CHANNEL" ? activeTabStyle : {}}
+                onClick={() => setTab("CHANNEL")}
+              >
+                Channels
+              </span>
+              <span
+                style={tab === "ABOUT" ? activeTabStyle : {}}
+                onClick={() => setTab("ABOUT")}
+              >
+                About
+              </span>
             </div>
           </div>
           <div className="profile-header-right">
@@ -89,23 +110,9 @@ const Profile: React.FC<Props> = ({ OpenEditProfileFunc, setVideoContent }) => {
         </div>
 
         <div className="videos-container">
-          {videos.map((video: any, i: number) => (
-            <>
-              <div
-                key={i}
-                onClick={async () => {
-                  setVideoContent(video.video_id);
-                  setTimeout(function () {
-                    history.push("/video");
-                  }, 500);
-                }}
-                className="each-video-container"
-              >
-                <ReactPlayer width="350px" height="200px" url={video.link} />
-                <span>{video.title}</span>
-              </div>
-            </>
-          ))}
+          {tab === "VIDEOS" && <Profilevideos videos={videos} />}
+          {tab === "CHANNEL" && <Profilechannel />}
+          {tab === "ABOUT" && <Profileabout />}
         </div>
       </div>
     </>

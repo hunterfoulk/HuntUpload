@@ -3,11 +3,9 @@ import { useStateValue } from "../../state";
 import { Link, useHistory } from "react-router-dom";
 import "./likes.scss";
 
-interface Props {
-  setVideoContent: setVideoContent;
-}
+interface Props {}
 
-const Likes: React.FC<Props> = ({ setVideoContent }) => {
+const Likes: React.FC<Props> = ({}) => {
   const [{ auth }, dispatch] = useStateValue();
   const history = useHistory();
 
@@ -21,11 +19,9 @@ const Likes: React.FC<Props> = ({ setVideoContent }) => {
           <div className="likes">
             <div className="thumbnail-container">
               <video
+                key={video.video_id}
                 onClick={async () => {
-                  setVideoContent(video.video_id);
-                  setTimeout(function () {
-                    history.push("/video");
-                  }, 600);
+                  history.push(`video/${video.video_id}`);
                 }}
                 src={video.link}
               />

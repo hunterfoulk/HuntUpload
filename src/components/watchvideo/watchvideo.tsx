@@ -13,11 +13,9 @@ import "./watchvideo.scss";
 import { Console } from "console";
 
 interface Props {
-  videoContent: any;
-  setVideoContent: setVideoContent;
   allVideos: [];
   GetAllVideos: () => void;
-  handleVideoRequest: () => void;
+  handleVideoRequest: (video_id: any) => void;
   video: any;
   handleLikeVideo: (video: any) => void;
   setIsLiked: setIsLiked;
@@ -37,8 +35,6 @@ interface Comment {
 }
 
 const Watchvideo: React.FC<Props> = ({
-  videoContent,
-  setVideoContent,
   allVideos,
   GetAllVideos,
   handleVideoRequest,
@@ -66,7 +62,6 @@ const Watchvideo: React.FC<Props> = ({
     pic: auth.user.pic,
     comment: "",
   });
-  // const [video, setVideo] = useState<any>({});
 
   const HandlePlay = () => {
     setPlaying(!isPlaying);
@@ -93,9 +88,9 @@ const Watchvideo: React.FC<Props> = ({
     playerRef.current.seekTo(parseFloat(e.target.value));
   };
 
-  const SubmitNewComment = async (e: any, videoContent: any, comment: {}) => {
+  const SubmitNewComment = async (e: any, video: any, comment: {}) => {
     e.preventDefault();
-    let video_id = parseInt(videoContent.video_id);
+    let video_id = parseInt(video.video_id);
     console.log("new comments", video_id);
     console.log(comment);
 
@@ -108,7 +103,7 @@ const Watchvideo: React.FC<Props> = ({
       )
       .then((res) => {
         console.log("new comment data", res.data);
-        handleVideoRequest();
+        handleVideoRequest(video_id);
       })
       .catch((error) => console.error("post not updated succesfully", error));
 
@@ -118,16 +113,18 @@ const Watchvideo: React.FC<Props> = ({
   // CURRENT VIDEO REQUEST //
   useEffect(() => {
     console.log("fireddd");
-    handleVideoRequest();
     GetAllVideos();
     videoIsLiked();
     isSubscribed();
-  }, [videoContent]);
-
-  useEffect(() => {
-    videoIsLiked();
-    isSubscribed();
   }, [video]);
+
+  const fullPath = window.location.pathname;
+  const path_id = window.location.pathname.replace("/video/", "");
+  useEffect(() => {
+    console.log("FULL PATHNAME", window.location.pathname);
+    console.log("PARSED PATH ID", path_id);
+    handleVideoRequest(path_id);
+  }, [fullPath]);
 
   return (
     <>
@@ -384,14 +381,13 @@ const Watchvideo: React.FC<Props> = ({
             </div>
           </div>
         </div>
-
         {/* RIGHT CONTAINER */}
         <div className="video-page-right-container">
           {allVideos.map((video: any) => (
             <div className="video-page-videos">
               <ReactPlayer
                 onClick={async () => {
-                  setVideoContent(video.video_id);
+                  history.push(video.video_id);
                 }}
                 width="100%"
                 height="100%"

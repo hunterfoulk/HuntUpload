@@ -52,10 +52,7 @@
         font-size: 20px;
         margin-left: 20px;
         color: rgb(145, 145, 145);
-        span:hover {
-          text-decoration: underline;
-          cursor: pointer;
-        }
+        cursor: pointer;
       }
     }
     .profile-header-right {
@@ -97,6 +94,39 @@
         font-size: 20px;
         color: white;
       }
+    }
+  }
+}
+
+// ABOUT ME //
+.about-main {
+  display: flex;
+  flex-direction: column;
+  // background-color: Red;
+  width: 100%;
+  padding: 0px 10px;
+  p {
+    font-size: 20px;
+    color: white;
+  }
+}
+
+.channels-main {
+  display: flex;
+  // background-color: red;
+  margin-top: 10px;
+  .channel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // background-color: green;
+    margin: 25px;
+
+    color: white;
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
     }
   }
 }

@@ -1,14 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./home.scss";
+import { Link, useHistory } from "react-router-dom";
 
-interface Props {}
+interface Props {
+  GetAllVideos: () => void;
+  allVideos: any;
+}
 
-const Home: React.FC<Props> = ({}) => {
+const Home: React.FC<Props> = ({ GetAllVideos, allVideos }) => {
+  const history = useHistory();
+
+  useEffect(() => {
+    GetAllVideos();
+  }, []);
+
   return (
     <>
       <div className="main-container">
-        <div>
-          <h1>Hello</h1>
+        <div className="home-videos-container">
+          {allVideos.map((video: any) => (
+            <>
+              <div className="video">
+                <div className="thumbnail-container">
+                  <video
+                    className="thumbnail"
+                    src={video.link}
+                    onClick={async () => {
+                      history.push(`video/${video.video_id}`);
+                    }}
+                  />
+                </div>
+                <div className="title-container">
+                  <span className="title">{video.title}</span>
+                  <span className="uploader">{video.uploader}</span>
+                </div>
+              </div>
+            </>
+          ))}
         </div>
       </div>
     </>

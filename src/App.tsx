@@ -27,7 +27,9 @@ const App: React.FC<Props> = ({}) => {
   const [{ auth, components }, dispatch] = useStateValue();
   const [videoContent, setVideoContent] = useState<any>(null);
   const [allVideos, setAllVideos] = useState<any>([]);
-  const [video, setVideo] = useState<any>({});
+  const [video, setVideo] = useState<any>({
+    comments: [],
+  });
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isDisliked, setIsDisliked] = useState<boolean>(false);
   const [isSubbed, setIsSubbed] = useState<boolean>(false);
@@ -82,12 +84,15 @@ const App: React.FC<Props> = ({}) => {
   };
 
   // CURRENT VIDEO //
-  const handleVideoRequest = async () => {
-    console.log("video content", videoContent);
-    const queryParams = { params: { videoContent } };
+  const handleVideoRequest = async (video_id: any) => {
+    // console.log("video content", videoContent);
+    // let video_id = videoContent;
+    console.log("vid id ", video_id);
+    const queryParams = { params: { video_id } };
+
     await axios
       .get(
-        "http://localhost:9000/.netlify/functions/server/youtube/currentvideo",
+        `http://localhost:9000/.netlify/functions/server/youtube/currentvideo/${video_id}`,
         queryParams
       )
       .then((res) => {
@@ -98,9 +103,9 @@ const App: React.FC<Props> = ({}) => {
       });
   };
 
-  useEffect(() => {
-    handleVideoRequest();
-  }, [videoContent]);
+  // useEffect(() => {
+  //   handleVideoRequest(videoContent);
+  // }, [videoContent]);
 
   console.log("liked state", isLiked);
 
@@ -134,7 +139,7 @@ const App: React.FC<Props> = ({}) => {
           console.log("video like data", res);
           console.log("payload", res.data.payload);
           localStorage.setItem("user", JSON.stringify(user));
-          setVideoContent(video);
+          setVideo(video);
 
           dispatch({
             type: "update",
@@ -167,8 +172,7 @@ const App: React.FC<Props> = ({}) => {
           console.log("video like data", res);
           console.log("payload", res.data.payload);
           localStorage.setItem("user", JSON.stringify(user));
-          setVideoContent(video);
-
+          setVideo(video);
           dispatch({
             type: "update",
             auth: {
@@ -253,7 +257,6 @@ const App: React.FC<Props> = ({}) => {
       )
     ) {
       console.log("Object found inside the array.", video.video_id);
-
       setIsLiked(true);
     } else {
       console.log("Object not found.");
@@ -279,7 +282,6 @@ const App: React.FC<Props> = ({}) => {
     console.log("user id", video.user_id);
     let videoUser = parseInt(video.user_id);
     let user_id = parseInt(auth.user.user_id);
-
     await axios
       .post(
         "http://localhost:9000/.netlify/functions/server/youtube/subscribe",
@@ -293,7 +295,7 @@ const App: React.FC<Props> = ({}) => {
         console.log("subsriber user data", res);
         localStorage.setItem("user", JSON.stringify(user));
         console.log("payload", res.data.payload);
-
+        setIsSubbed(true);
         dispatch({
           type: "update",
           auth: {
@@ -328,7 +330,7 @@ const App: React.FC<Props> = ({}) => {
                 <Navbar />
                 <div className="home-container">
                   <Sidebar />
-                  <Home />
+                  <Home GetAllVideos={GetAllVideos} allVideos={allVideos} />
                 </div>
               </>
             )}
@@ -356,13 +358,13 @@ const App: React.FC<Props> = ({}) => {
             exact
             path="/profile"
             render={() => (
-              <div className="home-container">
-                <Sidebar />
-                <Profile
-                  OpenEditProfileFunc={OpenEditProfileFunc}
-                  setVideoContent={setVideoContent}
-                />
-              </div>
+              <>
+                <Navbar />
+                <div className="home-container">
+                  <Sidebar />
+                  <Profile OpenEditProfileFunc={OpenEditProfileFunc} />
+                </div>
+              </>
             )}
           ></Route>
           {/* LIKES ROUTE */}
@@ -374,14 +376,14 @@ const App: React.FC<Props> = ({}) => {
                 <Navbar />
                 <div className="home-container">
                   <Sidebar />
-                  <Likes setVideoContent={setVideoContent} />
+                  <Likes />
                 </div>
               </>
             )}
           ></Route>
           <Route
             exact
-            path="/video"
+            path="/video/:video_id"
             render={() => (
               <>
                 <Navbar />
@@ -400,8 +402,6 @@ const App: React.FC<Props> = ({}) => {
                     video={video}
                     GetAllVideos={GetAllVideos}
                     allVideos={allVideos}
-                    setVideoContent={setVideoContent}
-                    videoContent={videoContent}
                     handleVideoRequest={handleVideoRequest}
                   />
                 </div>

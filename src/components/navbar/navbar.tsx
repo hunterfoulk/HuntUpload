@@ -10,21 +10,20 @@ import { MdNotifications } from "react-icons/md";
 import { useStateValue } from "../../state";
 import { Link, useHistory } from "react-router-dom";
 
-interface Props {
-}
+interface Props {}
 
-const Navbar: React.FC<Props> = ({ }) => {
+const Navbar: React.FC<Props> = ({}) => {
   const [{ auth, components }, dispatch] = useStateValue();
   const history = useHistory();
 
   const profileRoute = (e: any) => {
     dispatch({
-      type: 'manage',
+      type: "manage",
       components: {
         ...components,
-        navdrop: false
-      }
-    })
+        navdrop: false,
+      },
+    });
     history.push("/profile");
   };
 
@@ -35,12 +34,12 @@ const Navbar: React.FC<Props> = ({ }) => {
       type: "logout",
     });
     await dispatch({
-      type: 'manage',
+      type: "manage",
       components: {
         ...components,
-        navdrop: false
-      }
-    })
+        navdrop: false,
+      },
+    });
 
     history.push("/login");
   };
@@ -49,7 +48,7 @@ const Navbar: React.FC<Props> = ({ }) => {
     <>
       <div className="navbar">
         <div className="left-container">
-          <div style={{ marginLeft: "60px" }}>
+          <div style={{ marginLeft: "100px" }}>
             <span>Hunt</span>
             <span style={{ color: "#E53B38" }}>Upload</span>
             <AiFillYoutube
@@ -74,13 +73,13 @@ const Navbar: React.FC<Props> = ({ }) => {
           <MdVideoCall
             onClick={() => {
               dispatch({
-                type: 'manage',
+                type: "manage",
                 components: {
                   ...components,
                   uploadModal: true,
-                  backdrop: true
-                }
-              })
+                  backdrop: true,
+                },
+              });
             }}
             style={{
               fontSize: "30px",
@@ -100,15 +99,18 @@ const Navbar: React.FC<Props> = ({ }) => {
             }}
           />
 
-          <img onClick={() => {
-            dispatch({
-              type: 'manage',
-              components: {
-                ...components,
-                navdrop: !components.navdrop
-              }
-            })
-          }} src={auth.user.pic} />
+          <img
+            onClick={() => {
+              dispatch({
+                type: "manage",
+                components: {
+                  ...components,
+                  navdrop: !components.navdrop,
+                },
+              });
+            }}
+            src={auth.user.pic}
+          />
         </div>
         {components.navdrop && (
           <div className="nav-dropdown">

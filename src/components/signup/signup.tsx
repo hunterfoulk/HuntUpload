@@ -5,14 +5,27 @@ import { Link, useHistory } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import axios from "axios";
 import Defaultpic from "../../images/default.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-interface Props { }
+interface Props {}
 
-const Signup: React.FC<Props> = ({ }) => {
+const Signup: React.FC<Props> = ({}) => {
   const history = useHistory();
   const email = useInput("");
   const name = useInput("");
   const password = useInput("");
+
+  const notify = () =>
+    toast.success("Your account has been registered!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   const handleSignup = async (e: any) => {
     e.preventDefault();
@@ -33,6 +46,7 @@ const Signup: React.FC<Props> = ({ }) => {
       .then((res) => {
         console.log("respone", res);
         console.log("signup sent to database");
+        notify();
       })
       .catch((error) => {
         console.error("error", error);
@@ -47,6 +61,17 @@ const Signup: React.FC<Props> = ({ }) => {
     <>
       {" "}
       <div className="login-main">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <div className="login-container">
           <div className="login-header">
             <span>Hunt</span>
