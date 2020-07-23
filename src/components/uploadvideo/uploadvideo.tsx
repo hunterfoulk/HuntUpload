@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 interface Props {}
 
 const UploadVideo: React.FC<Props> = ({}) => {
-  const [{ auth }, dispatch] = useStateValue();
+  const [{ auth, components }, dispatch] = useStateValue();
   const [video, setVideo] = useState<any>("");
   const [videoFile, setVideoFile] = useState<any>("");
   const [isPlaying, setPlaying] = useState(false);
@@ -99,6 +99,14 @@ const UploadVideo: React.FC<Props> = ({}) => {
         console.log("response", res);
         console.log("new video uploaded to database");
         notify();
+        dispatch({
+          type: "manage",
+          components: {
+            ...components,
+            backdrop: false,
+            uploadModal: false,
+          },
+        });
       })
       .catch((error) => {
         console.error("error", error);

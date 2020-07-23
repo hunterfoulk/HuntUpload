@@ -14,8 +14,9 @@ const initialState = {
     navdrop: false,
     uploadModal: false,
     profileModal: false,
-    backdrop: false
-  }
+    backdrop: false,
+    isFetching: true,
+  },
 };
 
 const user = localStorage.getItem("user");
@@ -49,11 +50,11 @@ const reducer = (state: any, action: any) => {
         ...state,
         auth: action.auth,
       };
-    case 'manage':
+    case "manage":
       return {
         ...state,
-        components: action.components
-      }
+        components: action.components,
+      };
     default:
       return state;
   }

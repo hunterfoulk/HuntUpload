@@ -10,7 +10,7 @@ import { AiFillDislike } from "react-icons/ai";
 import { useStateValue } from "../../state";
 import { Link, useHistory } from "react-router-dom";
 import "./watchvideo.scss";
-import { Console } from "console";
+import Skeleton from "../skeletons/videoskeleton";
 
 interface Props {
   allVideos: [];
@@ -50,7 +50,7 @@ const Watchvideo: React.FC<Props> = ({
   isSubbed,
 }) => {
   const history = useHistory();
-  const [{ auth }, dispatch] = useStateValue();
+  const [{ auth, components }, dispatch] = useStateValue();
   const [isPlaying, setPlaying] = useState(false);
   const [volume, setVolume] = useState(20);
   const [played, setPlayed] = useState(0);
@@ -125,6 +125,10 @@ const Watchvideo: React.FC<Props> = ({
     console.log("PARSED PATH ID", path_id);
     handleVideoRequest(path_id);
   }, [fullPath]);
+
+  if (components.isFetching) {
+    return <Skeleton />;
+  }
 
   return (
     <>

@@ -97,6 +97,13 @@ const App: React.FC<Props> = ({}) => {
       )
       .then((res) => {
         setVideo(res.data);
+        dispatch({
+          type: "manage",
+          components: {
+            ...components,
+            isFetching: false,
+          },
+        });
       })
       .catch((error) => {
         console.error("error", error);
@@ -282,6 +289,7 @@ const App: React.FC<Props> = ({}) => {
     console.log("user id", video.user_id);
     let videoUser = parseInt(video.user_id);
     let user_id = parseInt(auth.user.user_id);
+
     await axios
       .post(
         "http://localhost:9000/.netlify/functions/server/youtube/subscribe",

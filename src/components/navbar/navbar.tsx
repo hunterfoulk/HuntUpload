@@ -40,8 +40,9 @@ const Navbar: React.FC<Props> = ({}) => {
         navdrop: false,
       },
     });
-
-    history.push("/login");
+    setTimeout(() => {
+      history.push("/login");
+    }, 500);
   };
 
   return (
@@ -133,7 +134,19 @@ const Navbar: React.FC<Props> = ({}) => {
                 />
                 Your Channel
               </span>
-              <span>
+              <span
+                onClick={() => {
+                  dispatch({
+                    type: "manage",
+                    components: {
+                      ...components,
+                      uploadModal: true,
+                      backdrop: true,
+                      navdrop: false,
+                    },
+                  });
+                }}
+              >
                 <FiUpload
                   style={{
                     marginRight: "5px",
