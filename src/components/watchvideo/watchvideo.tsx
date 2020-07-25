@@ -4,7 +4,6 @@ import ReactPlayer from "react-player/lazy";
 import { BsPlayFill } from "react-icons/bs";
 import { IoMdPause } from "react-icons/io";
 import { AiFillLike } from "react-icons/ai";
-import { AiTwotoneDislike } from "react-icons/ai";
 import { BsFillVolumeUpFill } from "react-icons/bs";
 import { AiFillDislike } from "react-icons/ai";
 import { useStateValue } from "../../state";
@@ -55,7 +54,6 @@ const Watchvideo: React.FC<Props> = ({
   const [volume, setVolume] = useState(20);
   const [played, setPlayed] = useState(0);
   const [seeking, setSeeking] = useState(false);
-
   const playerRef = useRef<any>(null);
   const [comment, setComment] = useState<Comment>({
     name: auth.user.name,

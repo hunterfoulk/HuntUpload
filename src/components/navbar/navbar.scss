@@ -21,14 +21,19 @@
     }
   }
   .middle-container {
+    form {
+      display: flex;
+      width: 100%;
+    }
     display: flex;
     justify-content: center;
     padding: 5px 0px;
     // background-color: red;
     width: 33%;
     button {
-      padding: 1px 18px;
-      font-size: 20px;
+      padding: 0px 18px;
+      font-size: 20.3px;
+      outline: none;
       background-color: rgb(87, 87, 87);
       border: grey;
       color: white;
@@ -107,4 +112,39 @@
       }
     }
   }
+}
+
+.search-dropdown {
+  display: flex;
+  z-index: 100;
+  // position: fixed;
+  position: absolute;
+  flex-direction: column;
+  top: 50px;
+  left: 38.5%;
+  width: 24%;
+  max-width: 24%;
+  // max-height: 200px;
+  background-color: white;
+  color: black;
+  padding: 8px 5px;
+
+  .title-wrapper {
+    width: 100%;
+    // background-color: rgb(99, 148, 99);
+    margin-bottom: 10px;
+    cursor: default;
+    span {
+      margin-bottom: 8px;
+      font-weight: 600;
+      // margin-left: 5px;
+    }
+  }
+
+  .title-wrapper:hover {
+    background-color: rgb(235, 235, 235);
+  }
+}
+.search-dropdown-none {
+  background-color: red;
 }

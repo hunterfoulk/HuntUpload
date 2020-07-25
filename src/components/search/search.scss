@@ -1,0 +1,84 @@
+.search-main {
+  display: flex;
+  width: 100%;
+  background-color: #191919;
+  //   justify-content: center;
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    // background-color: red;
+    align-items: center;
+    width: 70%;
+    .searched-videos {
+      display: flex;
+      margin-bottom: 15px;
+      width: 80%;
+      //   background-color: green;
+      height: 230px;
+      .thumbnail-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 35%;
+        // background-color: orange;
+        video {
+          //   height: 50%;
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+      .text-container {
+        display: flex;
+        flex-direction: column;
+        // background-color: purple;
+        width: 60%;
+        .title-container {
+          display: flex;
+          align-items: center;
+          font-size: 26px;
+          height: 32%;
+          //   background-color: yellow;
+          span {
+            margin-left: 13px;
+            color: rgb(146, 146, 146);
+          }
+        }
+        .name-container {
+          display: flex;
+          width: 100%;
+          //   background-color: green;
+          margin-left: 10px;
+          span {
+            margin-left: 5px;
+            color: rgb(146, 146, 146);
+          }
+        }
+        .description-container {
+          //   background-color: red;
+          margin-top: 8px;
+          span {
+            margin-left: 15px;
+            color: rgb(146, 146, 146);
+          }
+        }
+      }
+    }
+  }
+}
+
+.no-results-main {
+  display: flex;
+  width: 100%;
+  background-color: rgb(40, 40, 40);
+  justify-content: center;
+  .img-container {
+    display: flex;
+    width: 50%;
+    // background-color: Red;
+    align-items: center;
+    img {
+      height: 50%;
+      margin-bottom: 50px;
+    }
+  }
+}

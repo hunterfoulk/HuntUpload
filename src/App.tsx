@@ -15,11 +15,12 @@ import UploadVideo from "./components/uploadvideo/uploadvideo";
 import ModalTransition from "././hooks/transition";
 import VideoModalTransition from "././hooks/videotransition";
 import WatchVideo from "./components/watchvideo/watchvideo";
+import Search from "./components/search/search";
 import { useStateValue } from "../src/state";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link, useHistory } from "react-router-dom";
 
 interface Props {}
 
@@ -33,6 +34,9 @@ const App: React.FC<Props> = ({}) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isDisliked, setIsDisliked] = useState<boolean>(false);
   const [isSubbed, setIsSubbed] = useState<boolean>(false);
+  const [searchedVideos, setSearchedVideos] = useState([]);
+  const [searchterm, setSearchterm] = useState("");
+  const history = useHistory();
 
   const OpenEditProfileFunc = () => {
     dispatch({
@@ -85,8 +89,6 @@ const App: React.FC<Props> = ({}) => {
 
   // CURRENT VIDEO //
   const handleVideoRequest = async (video_id: any) => {
-    // console.log("video content", videoContent);
-    // let video_id = videoContent;
     console.log("vid id ", video_id);
     const queryParams = { params: { video_id } };
 
@@ -110,12 +112,7 @@ const App: React.FC<Props> = ({}) => {
       });
   };
 
-  // useEffect(() => {
-  //   handleVideoRequest(videoContent);
-  // }, [videoContent]);
-
   console.log("liked state", isLiked);
-
   //////////////// HANDLE LIKE ///////////////////
   const handleLikeVideo = async (video: any) => {
     let video_id = parseInt(video.video_id);
@@ -314,6 +311,25 @@ const App: React.FC<Props> = ({}) => {
       .catch((error) => console.log(error));
   };
 
+  ////////// SEARCH /////////
+  const handleSubmit = async (searchterm: string) => {
+    // setSearchterm(searchterm.replace(/%20/g, " "));
+    const queryParams = { params: { searchterm } };
+    console.log("handle sarch term", searchterm);
+    await axios
+      .get(
+        `http://localhost:9000/.netlify/functions/server/youtube/search/${searchterm}`,
+        queryParams
+      )
+      .then((res) => {
+        console.log("search response", res.data);
+        setSearchedVideos(res.data);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  };
+
   return (
     <>
       <Router>
@@ -335,7 +351,12 @@ const App: React.FC<Props> = ({}) => {
             path="/"
             render={() => (
               <>
-                <Navbar />
+                <Navbar
+                  searchterm={searchterm}
+                  setSearchedVideos={setSearchedVideos}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Home GetAllVideos={GetAllVideos} allVideos={allVideos} />
@@ -353,7 +374,12 @@ const App: React.FC<Props> = ({}) => {
             path="/subs"
             render={() => (
               <>
-                <Navbar />
+                <Navbar
+                  searchterm={searchterm}
+                  setSearchedVideos={setSearchedVideos}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Subscriptions />
@@ -367,7 +393,12 @@ const App: React.FC<Props> = ({}) => {
             path="/profile"
             render={() => (
               <>
-                <Navbar />
+                <Navbar
+                  searchterm={searchterm}
+                  setSearchedVideos={setSearchedVideos}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Profile OpenEditProfileFunc={OpenEditProfileFunc} />
@@ -381,7 +412,12 @@ const App: React.FC<Props> = ({}) => {
             path="/likes"
             render={() => (
               <>
-                <Navbar />
+                <Navbar
+                  setSearchedVideos={setSearchedVideos}
+                  searchterm={searchterm}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <Likes />
@@ -394,7 +430,12 @@ const App: React.FC<Props> = ({}) => {
             path="/video/:video_id"
             render={() => (
               <>
-                <Navbar />
+                <Navbar
+                  setSearchedVideos={setSearchedVideos}
+                  searchterm={searchterm}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
                 <div className="home-container">
                   <Sidebar />
                   <WatchVideo
@@ -411,6 +452,32 @@ const App: React.FC<Props> = ({}) => {
                     GetAllVideos={GetAllVideos}
                     allVideos={allVideos}
                     handleVideoRequest={handleVideoRequest}
+                  />
+                </div>
+              </>
+            )}
+          ></Route>
+
+          {/* SEARCH ROUTE */}
+          <Route
+            exact
+            path="/search/:searchterm"
+            render={() => (
+              <>
+                <Navbar
+                  setSearchedVideos={setSearchedVideos}
+                  searchterm={searchterm}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
+                <div className="home-container">
+                  <Sidebar />
+                  <Search
+                    setSearchedVideos={setSearchedVideos}
+                    setSearchterm={setSearchterm}
+                    // searchterm={searchterm}
+                    handleSubmit={handleSubmit}
+                    searchedVideos={searchedVideos}
                   />
                 </div>
               </>

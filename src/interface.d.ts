@@ -71,6 +71,9 @@ interface GetAllVideos {
 interface videoIsLiked {
   videoIsLiked: () => void;
 }
+interface handleSubmit {
+  handleSubmit: () => void;
+}
 
 type SetDropDown = Dispatch<Dropdown>;
 
@@ -87,3 +90,7 @@ type setVideo = Dispatch<setVideo>;
 type setIsLiked = Dispatch<setIsLiked>;
 
 type setIsSubbed = Dispatch<setIsSubbed>;
+
+type setSearchedVideos = Dispatch<setSearchedVideos>;
+
+type setSearchterm = Dispatch<setSearchterm>;
