@@ -62,18 +62,6 @@ const App: React.FC<Props> = ({}) => {
     });
   };
 
-  const OpenUploadModal = () => {
-    dispatch({
-      type: "manage",
-      components: {
-        ...components,
-        backdrop: true,
-        uploadModal: true,
-      },
-    });
-    console.log("modal");
-  };
-
   // GET ALL VIDEOS //
   const GetAllVideos = async () => {
     try {
@@ -83,6 +71,13 @@ const App: React.FC<Props> = ({}) => {
       const jsonData = await response.json();
 
       setAllVideos(jsonData);
+      dispatch({
+        type: "manage",
+        components: {
+          ...components,
+          isFetching: false,
+        },
+      });
     } catch (error) {
       console.error(error.message);
     }

@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import "./home.scss";
 import { Link, useHistory } from "react-router-dom";
+import { useStateValue } from "../../state";
+import Homeskeleton from "../skeletons/homeskeleton";
 
 interface Props {
   GetAllVideos: () => void;
@@ -8,12 +10,16 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ GetAllVideos, allVideos }) => {
+  const [{ auth, components }, dispatch] = useStateValue();
   const history = useHistory();
 
   useEffect(() => {
     GetAllVideos();
   }, []);
 
+  if (components.isFetching) {
+    return <Homeskeleton />;
+  }
   return (
     <>
       <div className="main-container">

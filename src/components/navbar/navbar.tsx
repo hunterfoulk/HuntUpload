@@ -33,9 +33,7 @@ const Navbar: React.FC<Props> = ({
   const [clicked, setClicked] = useState(false);
   const history = useHistory();
 
-  // Create a ref that we add to the element for which we want to detect outside clicks
   const ref = useRef<any>();
-  // Call hook passing in the ref and a function to call on outside click
   useClickOutside(ref, () => setTerm(false));
 
   const searchedVideos = async () => {
@@ -204,7 +202,7 @@ const Navbar: React.FC<Props> = ({
           />
         </div>
         {components.navdrop && (
-          <div className="nav-dropdown">
+          <div className="nav-dropdown" ref={ref}>
             <div className="nav-dropdown-header">
               <img src={auth.user.pic} />
               <div>

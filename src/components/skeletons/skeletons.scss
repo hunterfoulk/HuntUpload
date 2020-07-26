@@ -122,3 +122,31 @@
     }
   }
 }
+
+.home-skeleton-main {
+  display: flex;
+  flex-direction: column;
+  // background-color: rgb(192, 99, 99);
+  width: 100%;
+  .home-skeleton-header {
+    display: flex;
+    width: 20%;
+    height: 45px;
+    margin-left: 78px;
+    margin-top: 20px;
+    background-color: rgb(31, 31, 31);
+  }
+  .home-video-skeletons-container {
+    display: flex;
+    width: 100%;
+    height: 20%;
+    // background-color: rgb(167, 95, 95);
+    justify-content: space-evenly;
+    .home-video-skeletons {
+      width: 300px;
+      height: 160px;
+      margin-top: 20px;
+      background-color: rgb(31, 31, 31);
+    }
+  }
+}
