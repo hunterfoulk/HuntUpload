@@ -16,6 +16,7 @@ import ModalTransition from "././hooks/transition";
 import VideoModalTransition from "././hooks/videotransition";
 import WatchVideo from "./components/watchvideo/watchvideo";
 import Search from "./components/search/search";
+import Noresults from "./components/search/notfound";
 import { useStateValue } from "../src/state";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -324,12 +325,21 @@ const App: React.FC<Props> = ({}) => {
       .then((res) => {
         console.log("search response", res.data);
         setSearchedVideos(res.data);
+        dispatch({
+          type: "manage",
+          components: {
+            ...components,
+            isFetching: false,
+          },
+        });
       })
       .catch((error) => {
         console.error("error", error);
       });
   };
-
+  // if (searchedVideos.length === 0) {
+  //   history.push("/noresults");
+  // }
   return (
     <>
       <Router>
@@ -479,6 +489,26 @@ const App: React.FC<Props> = ({}) => {
                     handleSubmit={handleSubmit}
                     searchedVideos={searchedVideos}
                   />
+                </div>
+              </>
+            )}
+          ></Route>
+
+          {/* NO RESULSTS ROUTE */}
+          <Route
+            exact
+            path="/noresults"
+            render={() => (
+              <>
+                <Navbar
+                  setSearchedVideos={setSearchedVideos}
+                  searchterm={searchterm}
+                  handleSubmit={handleSubmit}
+                  setSearchterm={setSearchterm}
+                />
+                <div className="home-container">
+                  <Sidebar />
+                  <Noresults />
                 </div>
               </>
             )}

@@ -17,6 +17,9 @@ const Home: React.FC<Props> = ({ GetAllVideos, allVideos }) => {
   return (
     <>
       <div className="main-container">
+        <div className="header-container">
+          <h1>Recommended</h1>
+        </div>
         <div className="home-videos-container">
           {allVideos.map((video: any) => (
             <>

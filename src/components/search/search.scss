@@ -73,12 +73,15 @@
   justify-content: center;
   .img-container {
     display: flex;
-    width: 50%;
+    width: 100%;
     // background-color: Red;
-    align-items: center;
+    justify-content: center;
+    // align-items: center;
     img {
-      height: 50%;
-      margin-bottom: 50px;
+      height: 40%;
+      position: relative;
+      top: 200px;
+      right: 30px;
     }
   }
 }

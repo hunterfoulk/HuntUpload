@@ -1,14 +1,24 @@
 .main-container {
   display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
   background-color: #191919;
+  .header-container {
+    display: flex;
+    // background-color: green;
+    h1 {
+      color: white;
+      margin-left: 40px;
+    }
+  }
   .home-videos-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: flex-start;
+    // background-color: rgb(190, 94, 94);
     .video {
       display: flex;
       flex-direction: column;

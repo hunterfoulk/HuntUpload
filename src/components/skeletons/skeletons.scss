@@ -81,3 +81,44 @@
     }
   }
 }
+
+.search-skeleton-main {
+  display: flex;
+  // background-color: rgb(192, 99, 99);
+  width: 100%;
+  .search-skeleton-container {
+    display: flex;
+    width: 50%;
+    // justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    // background-color: green;
+    .search-vids {
+      margin-top: 20px;
+      display: flex;
+      // flex-direction: column;
+      // background-color: red;
+      width: 600px;
+      height: 200px;
+      .vid {
+        width: 260px;
+        height: 150px;
+        background-color: rgb(31, 31, 31);
+      }
+      .title {
+        width: 200px;
+        height: 20px;
+        margin-top: 8px;
+        margin-left: 10px;
+        background-color: rgb(31, 31, 31);
+      }
+      .title-two {
+        width: 120px;
+        height: 20px;
+        margin-top: 8px;
+        margin-left: 10px;
+        background-color: rgb(31, 31, 31);
+      }
+    }
+  }
+}

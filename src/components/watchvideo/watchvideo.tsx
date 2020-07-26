@@ -242,7 +242,7 @@ const Watchvideo: React.FC<Props> = ({
           <div className="video-header">
             <span className="video-title">{video.title}</span>
             <div className="video-views-container">
-              <span>0 views</span>
+              <span>{video.views} views</span>
               <span>July 17,2020</span>
             </div>
             <div className="video-likes">

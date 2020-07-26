@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./navbar.scss";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiFillYoutube } from "react-icons/ai";
 import { IoMdPerson } from "react-icons/io";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaLess } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
 import { MdVideoCall } from "react-icons/md";
 import { MdNotifications } from "react-icons/md";
@@ -11,7 +11,7 @@ import { useStateValue } from "../../state";
 import useInput from "../../hooks/useInput";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import { title } from "process";
+import useClickOutside from "../../hooks/useClickOutside";
 
 interface Props {
   setSearchedVideos: setSearchedVideos;
@@ -28,10 +28,15 @@ const Navbar: React.FC<Props> = ({
 }) => {
   const [{ auth, components }, dispatch] = useStateValue();
   const [titles, setTitles] = useState([]);
+  const [originalTitles, setOriginalTitles] = useState([]);
   const [isTerm, setTerm] = useState(false);
   const [clicked, setClicked] = useState(false);
   const history = useHistory();
-  // const searchterm = useInput("");
+
+  // Create a ref that we add to the element for which we want to detect outside clicks
+  const ref = useRef<any>();
+  // Call hook passing in the ref and a function to call on outside click
+  useClickOutside(ref, () => setTerm(false));
 
   const searchedVideos = async () => {
     try {
@@ -40,7 +45,7 @@ const Navbar: React.FC<Props> = ({
       );
       const jsonData = await response.json();
 
-      setTitles(jsonData);
+      setOriginalTitles(jsonData);
     } catch (error) {
       console.error(error.message);
     }
@@ -79,38 +84,37 @@ const Navbar: React.FC<Props> = ({
     searchedVideos();
   }, []);
 
+  useEffect(() => {
+    if (titles.length === 0) {
+      setTerm(false);
+    }
+  }, [titles]);
+
   const handleSearchTerm = (e: any) => {
-    if (e.target.value !== "") {
-      setSearchterm(e.target.value);
-
-      let filteredData = titles.filter((video: any) =>
-        video.title?.toLowerCase().includes(e.target.value.toLowerCase())
+    setTerm(true);
+    const value = e.target.value;
+    if (value !== "") {
+      setSearchterm(value);
+      let filteredData = originalTitles.filter((video: any) =>
+        video.title?.toLowerCase().includes(value.toLowerCase())
       );
-
       setTitles(filteredData);
     } else {
+      setTerm(false);
       searchedVideos();
     }
   };
 
-  // const [data, setData] = useState(['hey', 'goodbye'])
-  // const [search, setSearch] = useState('');
-
-  // const filteredData = data.filter(d => d.includes(search))
-
-  // window.location.pathname.replace("/search/", "");
-
   const handleClick = async (video: any) => {
-    // setSearchterm(video.title);
-
     history.push(`/search/${video.title}`);
+    setTerm(false);
   };
 
   return (
     <>
       <div className="navbar">
-        {isTerm && (
-          <div className="search-dropdown">
+        {titles.length > 0 && isTerm && (
+          <div className="search-dropdown" ref={ref}>
             <>
               {titles.map((video: any, i: number) => (
                 <div key={i} className="title-wrapper">
